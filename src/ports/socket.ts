@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+
 import { getAgent } from "./http";
 
 export const socketClient = (url: string) =>
