@@ -1,21 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
-
 import { ApolloProvider } from "@apollo/client";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import apolloClient from "./ports/apollo/apollo";
+import { UserContextProvider } from "./context/user/User";
+import { FullscreenLoadingContextProvider } from "./context/loading/Loading";
 
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ChakraProvider>
+        <UserContextProvider>
+          <FullscreenLoadingContextProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </FullscreenLoadingContextProvider>
+        </UserContextProvider>
+      </ChakraProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
