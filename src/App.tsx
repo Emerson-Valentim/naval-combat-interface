@@ -1,27 +1,42 @@
-import React from "react";
+import React, { PropsWithChildren, useContext } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import logo from "./logo.svg";
 import "./App.css";
+import UserContext from "./context/user/User";
 
-function App() {
+import Welcome from "./pages/Home/Welcome";
+import Lobby from "./pages/Lobby/Lobby";
+
+const PrivateRoute: React.FC<
+  {
+    isAuthenticated: boolean;
+  } & PropsWithChildren<any>
+> = ({ isAuthenticated, children }) => {
+  return isAuthenticated && children ? children : <Navigate to="/" />;
+};
+
+const App = () => {
+  const { isAuthenticated } = useContext(UserContext);
+
+  console.log(isAuthenticated);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={isAuthenticated ? <Navigate to="/lobby" /> : <Welcome />}
+      />
+      <Route
+        path="/lobby"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <Lobby />
+          </PrivateRoute>
+        }
+      />
+      <Route path="*" element={<p>Not found</p>} />
+    </Routes>
   );
-}
+};
 
 export default App;
