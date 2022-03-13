@@ -1,9 +1,11 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import "./App.css";
-import useAuthentication from "./hooks/use-authentication";
+import UserContext from "./context/user/User";
+
 import Welcome from "./pages/Home/Welcome";
+import Lobby from "./pages/Lobby/Lobby";
 
 const PrivateRoute: React.FC<
   {
@@ -14,16 +16,21 @@ const PrivateRoute: React.FC<
 };
 
 const App = () => {
-  const { isAuthenticated } = useAuthentication();
+  const { isAuthenticated } = useContext(UserContext);
+
+  console.log(isAuthenticated);
 
   return (
     <Routes>
-      <Route path="/" element={<Welcome />} />
       <Route
-        path="/private"
+        path="/"
+        element={isAuthenticated ? <Navigate to="/lobby" /> : <Welcome />}
+      />
+      <Route
+        path="/lobby"
         element={
           <PrivateRoute isAuthenticated={isAuthenticated}>
-            <Welcome />
+            <Lobby />
           </PrivateRoute>
         }
       />
