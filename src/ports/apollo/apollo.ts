@@ -8,12 +8,20 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
-import useAuthentication from "../../hooks/use-authentication";
-
 import doRefreshToken from "./refresh-token";
 
 let isRefreshing = false;
 let pendingRequests: any[] = [];
+
+const getTokens = () => {
+  const tokens = localStorage.getItem("authentication");
+
+  try {
+    return JSON.parse(tokens || "{}");
+  } catch (error) {
+    return "{}";
+  }
+};
 
 const resolvePendingRequests = () => {
   pendingRequests.map((callback) => callback());
@@ -21,7 +29,7 @@ const resolvePendingRequests = () => {
 };
 
 const authLink = setContext((_, { headers }) => {
-  const { accessToken } = useAuthentication(true);
+  const { accessToken } = getTokens();
 
   return {
     headers: {
@@ -32,7 +40,8 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const errorLink = onError(({ graphQLErrors, operation, forward }) => {
-  const { refreshToken } = useAuthentication(true);
+  let forward$;
+  const { refreshToken } = getTokens();
 
   if (graphQLErrors) {
     for (const error of graphQLErrors) {
@@ -40,8 +49,6 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
         error?.extensions?.code === "UNAUTHENTICATED" && refreshToken;
 
       if (isTokenExpired) {
-        let forward$;
-
         if (!isRefreshing) {
           forward$ = fromPromise(
             doRefreshToken(apolloClient, refreshToken)
@@ -85,7 +92,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
     }
   }
 
-  return forward(operation);
+  return forward$ ? forward(operation) : undefined;
 });
 
 const httpLink = createHttpLink({
