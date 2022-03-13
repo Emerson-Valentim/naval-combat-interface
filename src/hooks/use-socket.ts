@@ -1,4 +1,4 @@
-import { socketClient } from "../ports/socket";
+import { socketClient } from "../ports/socket/socket";
 
 const socketHosts: { [key: string]: string } = {
   "socket-1": `${process.env.REACT_APP_SOCKET_HOST}:${process.env.REACT_APP_SOCKET_PORT}`,

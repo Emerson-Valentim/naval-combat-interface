@@ -1,4 +1,4 @@
-const useAuthentication = (retrieveToken = false) => {
+const useAuthentication = (retrieveTokens = false) => {
   const authenticationState = localStorage.getItem("authentication");
 
   if (!authenticationState) {
@@ -7,12 +7,13 @@ const useAuthentication = (retrieveToken = false) => {
     };
   }
 
-  if (retrieveToken) {
-    const { accessToken } = JSON.parse(authenticationState);
+  if (retrieveTokens) {
+    const { accessToken, refreshToken } = JSON.parse(authenticationState);
 
     return {
       isAuthenticated: true,
       accessToken,
+      refreshToken,
     };
   }
 
