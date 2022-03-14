@@ -8,13 +8,15 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
+import tokenStorage from "../../utils/token-storage";
+
 import doRefreshToken from "./refresh-token";
 
 let isRefreshing = false;
 let pendingRequests: any[] = [];
 
 const getTokens = () => {
-  const tokens = localStorage.getItem("authentication");
+  const tokens = tokenStorage.get();
 
   try {
     return JSON.parse(tokens || "{}");
@@ -22,6 +24,9 @@ const getTokens = () => {
     return "{}";
   }
 };
+
+const buildAuthenticationHeader = (token: string | undefined) =>
+  token ? `Bearer ${token}` : "";
 
 const resolvePendingRequests = () => {
   pendingRequests.map((callback) => callback());
@@ -34,7 +39,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: accessToken ? `${accessToken}` : "",
+      authorization: buildAuthenticationHeader(accessToken),
     },
   };
 });
@@ -53,7 +58,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
           forward$ = fromPromise(
             doRefreshToken(apolloClient, refreshToken)
               .then((tokens) => {
-                localStorage.setItem("authentication", JSON.stringify(tokens));
+                tokenStorage.set(JSON.stringify(tokens));
 
                 resolvePendingRequests();
 
@@ -62,16 +67,16 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
                 operation.setContext({
                   headers: {
                     ...oldHeaders,
-                    authorization: tokens.accessToken
-                      ? `${tokens.accessToken}`
-                      : "",
+                    authorization: buildAuthenticationHeader(
+                      tokens.accessToken
+                    ),
                   },
                 });
               })
               .catch(() => {
                 pendingRequests = [];
 
-                localStorage.removeItem("authentication");
+                tokenStorage.delete();
 
                 return;
               })

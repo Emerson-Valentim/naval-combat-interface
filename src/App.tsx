@@ -18,8 +18,6 @@ const PrivateRoute: React.FC<
 const App = () => {
   const { isAuthenticated } = useContext(UserContext);
 
-  console.log(isAuthenticated);
-
   return (
     <Routes>
       <Route
