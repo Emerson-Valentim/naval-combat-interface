@@ -6,17 +6,17 @@ import {
   AlertIcon,
   AlertTitle,
   FormLabel,
-  Input,
 } from "@chakra-ui/react";
 import { Formik, useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
 import FullscreenLoadingContext from "../../context/loading/Loading";
 import Button from "../../components/button/Button";
-
 import UserContext from "../../context/user/User";
+import tokenStorage from "../../utils/token-storage";
 
 import Styled from "./styled";
+import HomeInput from "./components/Input";
 
 const SIGN_IN_MUTATION = gql`
   mutation signIn($input: SignInInput!) {
@@ -37,7 +37,7 @@ const SignIn: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      localStorage.setItem("authentication", JSON.stringify(data.signIn));
+      tokenStorage.set(JSON.stringify(data.signIn));
 
       setFullscreenLoading(false);
       setAuthentication(true);
@@ -71,14 +71,14 @@ const SignIn: React.FC = () => {
     <Formik initialValues={initialValues} onSubmit={handleSubmit as () => void}>
       <Styled.Form>
         <FormLabel htmlFor="email">Email</FormLabel>
-        <Input
+        <HomeInput
           id="email"
           type="email"
           value={values.email}
           onChange={handleChange}
         />
         <FormLabel htmlFor="password">Senha</FormLabel>
-        <Input
+        <HomeInput
           id="password"
           type="password"
           value={values.password}

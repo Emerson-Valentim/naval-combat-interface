@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import tokenStorage from "../../utils/token-storage";
+
 const UserContext = React.createContext({
   isAuthenticated: false,
   setAuthentication: undefined as any,
@@ -10,7 +12,7 @@ UserContext.displayName = "User";
 const UserContextProvider: React.FC = ({ children }) => {
   const [isAuthenticated, setAuthentication] = useState(false);
 
-  const authenticationState = localStorage.getItem("authentication");
+  const authenticationState = tokenStorage.get();
 
   useEffect(() => {
     setAuthentication(!!authenticationState);

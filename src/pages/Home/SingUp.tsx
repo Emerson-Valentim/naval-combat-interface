@@ -1,7 +1,6 @@
 import { useMutation } from "@apollo/client";
 import {
   FormLabel,
-  Input,
   Button,
   Alert,
   AlertDescription,
@@ -14,6 +13,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import FullscreenLoadingContext from "../../context/loading/Loading";
 
+import HomeInput from "./components/Input";
 import Styled from "./styled";
 
 type CreateStatus = "success" | "error";
@@ -86,21 +86,21 @@ const SignUp: React.FC = () => {
     <Formik initialValues={initialValues} onSubmit={handleSubmit as () => void}>
       <Styled.Form>
         <FormLabel htmlFor="email">Email</FormLabel>
-        <Input
+        <HomeInput
           id="email"
           type="email"
           value={values.email}
           onChange={handleChange}
         />
         <FormLabel htmlFor="username">Apelido</FormLabel>
-        <Input
+        <HomeInput
           id="username"
           type="text"
           value={values.username}
           onChange={handleChange}
         />
         <FormLabel htmlFor="password">Senha</FormLabel>
-        <Input
+        <HomeInput
           id="password"
           type="password"
           value={values.password}
