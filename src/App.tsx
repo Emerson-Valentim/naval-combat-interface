@@ -6,6 +6,7 @@ import UserContext from "./context/user/User";
 
 import Welcome from "./pages/Home/Welcome";
 import Lobby from "./pages/Lobby/Lobby";
+import Room from "./pages/Lobby/Room";
 
 const PrivateRoute: React.FC<
   {
@@ -29,6 +30,14 @@ const App = () => {
         element={
           <PrivateRoute isAuthenticated={isAuthenticated}>
             <Lobby />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/room/:roomId"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <Room />
           </PrivateRoute>
         }
       />
