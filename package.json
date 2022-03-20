@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@apollo/react-hooks": "^4.0.0",
+    "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.7.4",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
@@ -44,7 +45,7 @@
     "styled-components": "^5.3.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "HOST=0.0.0.0 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
