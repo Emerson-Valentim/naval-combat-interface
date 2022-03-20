@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 
 import {
@@ -40,6 +40,7 @@ const CreateRoomButton: React.FC = () => {
   const { socket } = useContext(SocketContext);
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [roomId, setRoomId] = useState<string>("");
 
   const [createRoom, { data, loading }] = useMutation(CREATE_ROOM, {
     variables: {
@@ -71,31 +72,33 @@ const CreateRoomButton: React.FC = () => {
   });
 
   useEffect(() => {
-    if (data?.createRoom) {
-      socket.on(`client:room:ready:${data.createRoom.id}`, () => {
-        setFullscreenLoading(true);
+    socket.on(`client:room:ready`, (message: any) => {
+      setRoomId(message.roomId);
+    });
 
-        socket.emit(
-          `client:room:acknowledge`,
-          parseBuffer({
-            roomId: data.createRoom.id,
-          })
-        );
-
-        navigate(`/room/${data.createRoom.id}`);
-
-        setFullscreenLoading(false);
-      });
-
-      return () => {
-        socket.off();
-      };
-    }
-  }, [data]);
+    return () => {
+      socket.off(`client:room:ready`);
+    };
+  }, []);
 
   useEffect(() => {
-    setFullscreenLoading(loading);
-  }, [loading]);
+    if (roomId === data?.createRoom.id) {
+      setFullscreenLoading(true);
+
+      socket.emit(
+        `client:room:acknowledge`,
+        parseBuffer({
+          roomId: roomId,
+        })
+      );
+
+      setModalOpen(false);
+
+      navigate(`/room/${roomId}`);
+
+      setFullscreenLoading(false);
+    }
+  }, [roomId, data]);
 
   return (
     <>
