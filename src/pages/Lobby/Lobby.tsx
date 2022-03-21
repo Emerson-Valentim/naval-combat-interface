@@ -1,10 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/client";
-import { PlusSquareIcon } from "@chakra-ui/icons";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 
-import Button from "../../components/button/Button";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 
 import FullscreenLoadingContext from "../../context/loading/Loading";
 
@@ -13,6 +11,7 @@ import SocketContext from "../../context/socket/Socket";
 import CreateRoomButton from "./components/CreateRoomButton";
 import SignOutButton from "./components/SingOutButton";
 import Styled from "./styled";
+import JoinRoomButton from "./components/JoinRoomButton";
 
 const GET_ROOMS = gql`
   query getRooms {
@@ -29,12 +28,11 @@ const Lobby: React.FC = () => {
   const { data, loading, refetch } = useQuery(GET_ROOMS, {
     fetchPolicy: "network-only",
   });
-
   const { socket } = useContext(SocketContext);
-
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
+
   useEffect(() => {
     setFullscreenLoading(loading);
   }, [loading]);
@@ -73,9 +71,7 @@ const Lobby: React.FC = () => {
                   <Td>{room.title}</Td>
                   <Td>{`${room.players.length}/${room.limit}`}</Td>
                   <Td>
-                    <Button color="green">
-                      <PlusSquareIcon />
-                    </Button>
+                    <JoinRoomButton key={`join-${index}`} roomId={room.id} />
                   </Td>
                 </Tr>
               );
