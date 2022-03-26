@@ -38,12 +38,12 @@ const Lobby: React.FC = () => {
   }, [loading]);
 
   useEffect(() => {
-    socket.on("client:room:new", () => {
+    socket.on("client:room:refresh", () => {
       refetch();
     });
 
     return () => {
-      socket.off("client:room:new");
+      socket.off("client:room:refresh");
     };
   }, []);
 
