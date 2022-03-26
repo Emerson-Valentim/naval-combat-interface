@@ -42,21 +42,13 @@ const CreateRoomButton: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [roomId, setRoomId] = useState<string>("");
 
-  const [createRoom, { data, loading }] = useMutation(CREATE_ROOM, {
-    variables: {
-      input: {
-        limit: 4,
-        type: "PUBLIC",
-        title: "Sala do Emerson",
-      },
-    },
-  });
+  const [createRoom, { data, loading }] = useMutation(CREATE_ROOM);
 
   const { initialValues, values, handleSubmit, handleChange } = useFormik({
     initialValues: {
       title: "Sala do Emerson",
       type: "PUBLIC",
-      limit: 2,
+      limit: 3,
     },
     onSubmit: (values): void => {
       createRoom({

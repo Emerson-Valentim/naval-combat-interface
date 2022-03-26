@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { gql } from "apollo-boost";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import FullscreenLoadingContext from "../../../context/loading/Loading";
 import SocketContext from "../../../context/socket/Socket";
@@ -19,11 +19,11 @@ const JOIN_ROOM = gql`
 const JoinRoomButton: React.FC<{
   roomId: string;
 }> = ({ roomId }) => {
-  const [incomingRoomId, setIncomingRoomId] = useState<string>("");
   const { socket } = useContext(SocketContext);
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
+  const [incomingRoomId, setIncomingRoomId] = useState<string>("");
 
   const navigate = useNavigate();
 
