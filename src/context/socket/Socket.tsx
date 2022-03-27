@@ -19,13 +19,21 @@ const SocketContextProvider: React.FC = ({ children }) => {
 
   const establishConnection = () => {
     defaultValue.socket.connect();
-
-    defaultValue.socket.emit("client:signIn");
   };
 
   useEffect(() => {
     isAuthenticated ? establishConnection() : defaultValue.socket?.disconnect();
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    defaultValue.socket.on("client:request:signIn", () => {
+      defaultValue.socket.emit("client:signIn");
+    });
+
+    return () => {
+      defaultValue.socket.off("client:request:signIn");
+    };
+  }, []);
 
   return (
     <>
