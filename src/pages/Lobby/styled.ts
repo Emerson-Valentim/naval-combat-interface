@@ -64,8 +64,15 @@ const RoomWidgets = styled(Box)`
 `;
 
 const RoomInfoBox = styled(BoxWithPadding)`
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+
   width: 100%;
   max-width: 30vw;
+
+  padding: 1em;
 
   background-color: rgba(255, 0, 128, 0.5);
 `;
