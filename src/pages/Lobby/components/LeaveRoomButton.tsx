@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../../../components/button/Button";
@@ -12,12 +12,6 @@ interface LeaveRoomProps {
 const LeaveRoomButton: React.FC<LeaveRoomProps> = ({ roomId }) => {
   const navigate = useNavigate();
   const { socket } = useContext(SocketContext);
-
-  useEffect(() => {
-    return () => {
-      socket.off();
-    };
-  });
 
   const leaveRoom = () => {
     socket.emit(

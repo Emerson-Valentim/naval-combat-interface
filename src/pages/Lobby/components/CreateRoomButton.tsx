@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 
 import {
@@ -39,8 +39,8 @@ const CreateRoomButton: React.FC = () => {
 
   const { socket } = useContext(SocketContext);
 
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [roomId, setRoomId] = useState<string>("");
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   const [createRoom, { data, loading }] = useMutation(CREATE_ROOM);
 
