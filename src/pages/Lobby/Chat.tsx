@@ -1,6 +1,6 @@
 import { Input } from "@chakra-ui/react";
 import { Formik, useFormik } from "formik";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
 import Button from "../../components/button/Button";
@@ -11,17 +11,18 @@ import { parseBuffer } from "../../utils/buffer-parser";
 
 import Styled from "./styled";
 
-const Chat: React.FC = () => {
+export interface Messages {
+  message: string;
+  sender: string;
+}
+
+const Chat: React.FC<{
+  messages: Messages[];
+}> = ({ messages }) => {
   const { user } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
-  const chatRef = useRef<HTMLDivElement>(null);
 
-  const [messages, updateMessages] = useState<
-    {
-      message: string;
-      sender: string;
-    }[]
-  >([]);
+  const chatRef = useRef<HTMLDivElement>(null);
 
   const params = useParams();
 
@@ -34,38 +35,6 @@ const Chat: React.FC = () => {
         sendMessage(values.message);
       },
     });
-
-  useEffect(() => {
-    socket.on("client:room:update", ({ message, username, action }: any) => {
-      if (action === "message") {
-        updateMessages((value) =>
-          value.concat([
-            {
-              message,
-              sender: username,
-            },
-          ])
-        );
-      }
-
-      if (["leave", "join"].includes(action)) {
-        updateMessages((value) =>
-          value.concat([
-            {
-              message: `${action === "leave" ? "left" : "entered"} the room`,
-              sender: username,
-            },
-          ])
-        );
-
-        chatRef.current?.scrollIntoView({ behavior: "smooth" });
-      }
-    });
-
-    return () => {
-      socket.off("client:room:update");
-    };
-  }, []);
 
   const sendMessage = (message: string) => {
     if (message) {
