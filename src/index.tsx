@@ -10,17 +10,20 @@ import reportWebVitals from "./reportWebVitals";
 import apolloClient from "./ports/apollo/apollo";
 import { UserContextProvider } from "./context/user/User";
 import { FullscreenLoadingContextProvider } from "./context/loading/Loading";
+import { SocketContextProvider } from "./context/socket/Socket";
 
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
       <ChakraProvider>
         <UserContextProvider>
-          <FullscreenLoadingContextProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </FullscreenLoadingContextProvider>
+          <SocketContextProvider>
+            <FullscreenLoadingContextProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </FullscreenLoadingContextProvider>
+          </SocketContextProvider>
         </UserContextProvider>
       </ChakraProvider>
     </ApolloProvider>

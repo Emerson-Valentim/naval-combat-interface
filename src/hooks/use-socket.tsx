@@ -1,11 +1,20 @@
-import { socketClient } from "../ports/socket/socket";
+import { Socket } from "socket.io-client";
 
-const socketHosts: { [key: string]: string } = {
-  "socket-1": `${process.env.REACT_APP_SOCKET_HOST}:${process.env.REACT_APP_SOCKET_PORT}`,
+import { NavalCombatSocket } from "../ports/socket/socket";
+import tokenStorage from "../utils/token-storage";
+
+const socketHosts: { [key: string]: Socket } = {
+  "socket-1": NavalCombatSocket,
 };
 
 const useSocket = (instance: string) => {
-  const handler = socketClient(socketHosts[instance]);
+  const authenticationState = tokenStorage.get();
+
+  const accessToken = JSON.parse(authenticationState || "{}").accessToken;
+
+  const handler = socketHosts[instance];
+
+  handler.auth = { token: `Bearer ${accessToken}` };
 
   return handler;
 };
