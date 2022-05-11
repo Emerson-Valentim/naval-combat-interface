@@ -17,10 +17,10 @@ import { Form, Formik, useFormik } from "formik";
 
 import { useNavigate } from "react-router-dom";
 
-import Button from "../../../components/button/Button";
-import { parseBuffer } from "../../../utils/buffer-parser";
-import FullscreenLoadingContext from "../../../context/loading/Loading";
-import SocketContext from "../../../context/socket/Socket";
+import Button from "../../../../components/Button";
+import { parseBuffer } from "../../../../utils/buffer-parser";
+import FullscreenLoadingContext from "../../../../context/Loading";
+import SocketContext from "../../../../context/Socket";
 
 const CREATE_ROOM = gql`
   mutation createRoom($input: CreateRoomInput!) {

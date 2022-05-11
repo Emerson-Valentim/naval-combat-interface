@@ -3,13 +3,15 @@ import { Navigate, useParams } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
 import { gql } from "apollo-boost";
 
-import FullscreenLoadingContext from "../../context/loading/Loading";
+import FullscreenLoadingContext from "../../context/Loading";
 
-import SocketContext from "../../context/socket/Socket";
+import SocketContext from "../../context/Socket";
+
+import Info from "./components/Info";
 
 import Styled from "./styled";
-import Chat, { Messages } from "./Chat";
-import Info from "./Info";
+
+import Chat, { Messages } from "./components/Chat";
 
 const GET_ROOM = gql`
   query getRoom($input: GetRoomInput!) {

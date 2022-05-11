@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 import SignIn from "./SignIn";
-import SignUp from "./SingUp";
+import SignUp from "./SignUp";
 import Styled from "./styled";
 
 const Welcome: React.FC = () => {

@@ -1,17 +1,15 @@
-import React, { useContext, useEffect } from "react";
-import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/client";
-
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { gql } from "apollo-boost";
+import React, { useContext, useEffect } from "react";
 
-import FullscreenLoadingContext from "../../context/loading/Loading";
-
-import SocketContext from "../../context/socket/Socket";
+import FullscreenLoadingContext from "../../context/Loading";
+import SocketContext from "../../context/Socket";
 
 import CreateRoomButton from "./components/CreateRoomButton";
-import SignOutButton from "./components/SingOutButton";
-import Styled from "./styled";
 import JoinRoomButton from "./components/JoinRoomButton";
+import SignOutButton from "./components/SignOutButton";
+import Styled from "./styled";
 
 const GET_ROOMS = gql`
   query getRooms {

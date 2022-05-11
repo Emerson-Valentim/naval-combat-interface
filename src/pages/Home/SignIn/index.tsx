@@ -10,13 +10,14 @@ import {
 import { Formik, useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
-import FullscreenLoadingContext from "../../context/loading/Loading";
-import Button from "../../components/button/Button";
-import UserContext from "../../context/user/User";
-import tokenStorage from "../../utils/token-storage";
+import FullscreenLoadingContext from "../../../context/Loading";
+import Button from "../../../components/Button";
+import UserContext from "../../../context/User";
+import tokenStorage from "../../../utils/token-storage";
+
+import HomeInput from "../components/Input";
 
 import Styled from "./styled";
-import HomeInput from "./components/Input";
 
 const SIGN_IN_MUTATION = gql`
   mutation signIn($input: SignInInput!) {
