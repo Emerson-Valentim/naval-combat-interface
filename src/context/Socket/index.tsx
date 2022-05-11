@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { Socket } from "socket.io-client";
 
 import useSocket from "../../hooks/use-socket";
-import UserContext from "../user/User";
+import UserContext from "../User";
 
 const SocketContext = React.createContext({
   socket: undefined as any as Socket,

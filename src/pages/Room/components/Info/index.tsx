@@ -1,7 +1,8 @@
 import React from "react";
 import { Badge, Stat, StatGroup } from "@chakra-ui/react";
 
-import LeaveRoomButton from "./components/LeaveRoomButton";
+import LeaveRoomButton from "../LeaveRoomButton";
+
 import Styled from "./styled";
 
 const Info: React.FC<{ room: any }> = ({ room }) => {

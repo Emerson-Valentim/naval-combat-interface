@@ -8,9 +8,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import apolloClient from "./ports/apollo/apollo";
-import { UserContextProvider } from "./context/user/User";
-import { FullscreenLoadingContextProvider } from "./context/loading/Loading";
-import { SocketContextProvider } from "./context/socket/Socket";
+import { UserContextProvider } from "./context/User";
+import { FullscreenLoadingContextProvider } from "./context/Loading";
+import { SocketContextProvider } from "./context/Socket";
 
 ReactDOM.render(
   <React.StrictMode>

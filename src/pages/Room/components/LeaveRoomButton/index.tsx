@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "../../../components/button/Button";
-import SocketContext from "../../../context/socket/Socket";
-import { parseBuffer } from "../../../utils/buffer-parser";
+import Button from "../../../../components/Button";
+import SocketContext from "../../../../context/Socket";
+import { parseBuffer } from "../../../../utils/buffer-parser";
 
 interface LeaveRoomProps {
   roomId: string;

@@ -2,11 +2,11 @@ import React, { PropsWithChildren, useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import "./App.css";
-import UserContext from "./context/user/User";
+import UserContext from "./context/User";
 
-import Welcome from "./pages/Home/Welcome";
-import Lobby from "./pages/Lobby/Lobby";
-import Room from "./pages/Lobby/Room";
+import Welcome from "./pages/Home";
+import Lobby from "./pages/Lobby";
+import Room from "./pages/Room";
 
 const PrivateRoute: React.FC<
   {

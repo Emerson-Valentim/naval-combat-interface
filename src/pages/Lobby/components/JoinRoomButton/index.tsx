@@ -5,10 +5,10 @@ import { PlusSquareIcon } from "@chakra-ui/icons";
 
 import { useNavigate } from "react-router-dom";
 
-import FullscreenLoadingContext from "../../../context/loading/Loading";
-import SocketContext from "../../../context/socket/Socket";
-import { parseBuffer } from "../../../utils/buffer-parser";
-import Button from "../../../components/button/Button";
+import FullscreenLoadingContext from "../../../../context/Loading";
+import SocketContext from "../../../../context/Socket";
+import { parseBuffer } from "../../../../utils/buffer-parser";
+import Button from "../../../../components/Button";
 
 const JOIN_ROOM = gql`
   mutation joinRoom($input: JoinRoomInput!) {

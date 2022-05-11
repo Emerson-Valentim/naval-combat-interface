@@ -3,11 +3,11 @@ import { Formik, useFormik } from "formik";
 import React, { useContext, useRef } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
-import Button from "../../components/button/Button";
+import Button from "../../../../components/Button";
 
-import SocketContext from "../../context/socket/Socket";
-import UserContext from "../../context/user/User";
-import { parseBuffer } from "../../utils/buffer-parser";
+import SocketContext from "../../../../context/Socket";
+import UserContext from "../../../../context/User";
+import { parseBuffer } from "../../../../utils/buffer-parser";
 
 import Styled from "./styled";
 
