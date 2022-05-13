@@ -8,8 +8,8 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
 import Styled from "./styled";
 
 const Welcome: React.FC = () => {

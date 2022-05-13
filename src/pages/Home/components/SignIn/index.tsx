@@ -10,12 +10,12 @@ import {
 import { Formik, useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
-import FullscreenLoadingContext from "../../../context/Loading";
-import Button from "../../../components/Button";
-import UserContext from "../../../context/User";
-import tokenStorage from "../../../utils/token-storage";
+import FullscreenLoadingContext from "../../../../context/Loading";
+import Button from "../../../../components/Button";
+import UserContext from "../../../../context/User";
+import tokenStorage from "../../../../utils/token-storage";
 
-import HomeInput from "../components/Input";
+import HomeInput from "../Input";
 
 import Styled from "./styled";
 
