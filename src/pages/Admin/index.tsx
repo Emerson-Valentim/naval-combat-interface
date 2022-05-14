@@ -8,8 +8,10 @@ import Styled from "./styled";
 const Admin = () => {
   return (
     <Styled.Container>
-      <Users />
-      <Credits />
+      <Styled.ConfigContainer>
+        <Users />
+        <Credits />
+      </Styled.ConfigContainer>
       <Styled.SkinContainer>
         <Skins />
       </Styled.SkinContainer>

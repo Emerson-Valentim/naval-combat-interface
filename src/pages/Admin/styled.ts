@@ -23,7 +23,10 @@ const SkinContainer = styled.div`
   justify-content: center;
 `;
 
+const ConfigContainer = styled(SkinContainer)``;
+
 export default {
   Container,
   SkinContainer,
+  ConfigContainer,
 };
