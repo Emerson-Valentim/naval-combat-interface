@@ -1,84 +1,103 @@
-import { useQuery } from "@apollo/client";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { gql } from "apollo-boost";
-import React, { useContext, useEffect } from "react";
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spacer,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useDisclosure,
+} from "@chakra-ui/react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import FullscreenLoadingContext from "../../context/Loading";
-import SocketContext from "../../context/Socket";
+import UserContext from "../../context/User";
 
 import CreateRoomButton from "./components/CreateRoomButton";
-import JoinRoomButton from "./components/JoinRoomButton";
-import SignOutButton from "./components/SignOutButton";
+import RoomList from "./components/RoomList";
+import SignOut from "./components/SignOut";
+import Skins from "./components/Skins";
 import Styled from "./styled";
 
-const GET_ROOMS = gql`
-  query getRooms {
-    getRooms {
-      id
-      title
-      limit
-      players
-    }
-  }
-`;
+export default function withAction() {
+  const { user, roles } = useContext(UserContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-const Lobby: React.FC = () => {
-  const { data, loading, refetch } = useQuery(GET_ROOMS, {
-    fetchPolicy: "network-only",
-  });
-  const { socket } = useContext(SocketContext);
-  const { setLoading: setFullscreenLoading } = useContext(
-    FullscreenLoadingContext
-  );
+  const [isAdmin, setAdmin] = useState(false);
+  const [isMaintainer, setMaintainer] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setFullscreenLoading(loading);
-  }, [loading]);
+    const isAdmin = roles.includes("admin");
+    const isMaintainer = roles.includes("maintainer");
 
-  useEffect(() => {
-    socket.on("client:room:refresh", () => {
-      refetch();
-    });
-
-    return () => {
-      socket.off("client:room:refresh");
-    };
-  }, []);
+    setAdmin(isAdmin);
+    setMaintainer(isMaintainer);
+  }, [roles]);
 
   return (
-    <Styled.LobbyContainer>
-      <Styled.LobbyNavigation>
-        <CreateRoomButton />
-        <SignOutButton />
-      </Styled.LobbyNavigation>
-      <Styled.LobbyBox p={5} borderRadius={10}>
-        <Table variant="simple" overflow="scroll">
-          <Thead>
-            <Tr>
-              <Th>ID</Th>
-              <Th>Título</Th>
-              <Th>Lugares</Th>
-              <Th>Ações</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data?.getRooms?.map((room: any, index: number) => {
-              return (
-                <Tr key={index}>
-                  <Td>{room.id}</Td>
-                  <Td>{room.title}</Td>
-                  <Td>{`${room.players.length}/${room.limit}`}</Td>
-                  <Td>
-                    <JoinRoomButton key={`join-${index}`} roomId={room.id} />
-                  </Td>
-                </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </Styled.LobbyBox>
-    </Styled.LobbyContainer>
+    <Tabs variant="unstyled">
+      <Box px={6}>
+        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          <IconButton
+            size={"md"}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isOpen ? onClose : onOpen}
+          />
+          <HStack spacing={8} alignItems={"center"}>
+            <HStack
+              as={"nav"}
+              spacing={4}
+              display={{ base: "none", md: "flex" }}
+            >
+              <TabList>
+                {isMaintainer || isAdmin ? (
+                  <Tab onClick={() => navigate("/admin")}>
+                    Painel de Controle
+                  </Tab>
+                ) : null}
+                <Tab>Lobby</Tab>
+                <Tab>Skins</Tab>
+              </TabList>
+            </HStack>
+          </HStack>
+          <Flex alignItems={"center"}>
+            <CreateRoomButton />
+            <Spacer marginRight={4} />
+            <Menu>
+              <MenuButton as={Button} minW={0} background="transparent">
+                <Avatar size={"sm"} src={user?.skin?.current?.avatar} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  <SignOut />
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
+        </Flex>
+      </Box>
+      <Styled.Container>
+        <TabPanels>
+          <TabPanel>
+            <RoomList />
+            <Skins />
+          </TabPanel>
+        </TabPanels>
+      </Styled.Container>
+    </Tabs>
   );
-};
-
-export default Lobby;
+}
