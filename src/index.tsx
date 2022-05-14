@@ -15,8 +15,8 @@ import { SocketContextProvider } from "./context/Socket";
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
-      <ChakraProvider>
-        <UserContextProvider>
+      <UserContextProvider>
+        <ChakraProvider>
           <SocketContextProvider>
             <FullscreenLoadingContextProvider>
               <BrowserRouter>
@@ -24,8 +24,8 @@ ReactDOM.render(
               </BrowserRouter>
             </FullscreenLoadingContextProvider>
           </SocketContextProvider>
-        </UserContextProvider>
-      </ChakraProvider>
+        </ChakraProvider>
+      </UserContextProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
