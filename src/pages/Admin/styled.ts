@@ -17,11 +17,10 @@ const Container = styled.div`
 
 const SkinContainer = styled.div`
   width: 100vw;
+  height: 50%;
 
   display: flex;
   justify-content: center;
-
-  background-color: green;
 `;
 
 export default {

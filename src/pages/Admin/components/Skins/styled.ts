@@ -1,27 +1,31 @@
+import { Box as CBox, Td } from "@chakra-ui/react";
 import styled from "styled-components";
 
-const Container = styled.div`
+const Box = styled(CBox)`
   width: 100%;
 
   display: flex;
-  flex-direction: column;
+  margin: 1em;
+
+  background-color: white;
 `;
 
-const ImageContainer = styled.div`
-  width: 100%;
+const List = styled.div`
+  overflow: scroll;
 
-  display: flex;
-  flex-direction: row;
+  width: 35%;
 `;
 
-const SoundContainer = styled.div`
-  width: 100%;
-
+const ButtonsColumn = styled(Td)`
   display: flex;
+
+  button {
+    margin: 4px;
+  }
 `;
 
 export default {
-  Container,
-  ImageContainer,
-  SoundContainer,
+  List,
+  Box,
+  ButtonsColumn,
 };
