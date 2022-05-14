@@ -22,8 +22,11 @@ import Styled from "./styled";
 const SIGN_IN_MUTATION = gql`
   mutation signIn($input: SignInInput!) {
     signIn(input: $input) {
-      accessToken
-      refreshToken
+      tokens {
+        accessToken
+        refreshToken
+      }
+      roles
     }
   }
 `;
@@ -34,14 +37,17 @@ const SignIn: React.FC = () => {
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
-  const { setAuthentication } = useContext(UserContext);
+  const { setAuthentication, setRoles } = useContext(UserContext);
 
   useEffect(() => {
     if (data) {
-      tokenStorage.set(JSON.stringify(data.signIn));
+      const { roles, tokens } = data.signIn;
+
+      tokenStorage.set(JSON.stringify(tokens));
 
       setFullscreenLoading(false);
       setAuthentication(true);
+      setRoles(roles);
 
       navigate("/lobby");
     }
