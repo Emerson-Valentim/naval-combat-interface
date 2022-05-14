@@ -1,11 +1,14 @@
 import {
+  FormLabel,
   Image,
   Input,
   InputGroup,
   InputLeftAddon,
-  Stack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { HiOutlineUpload } from "react-icons/hi";
+
+import Styled from "./styled";
 
 function getBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -29,64 +32,93 @@ const Renders = {
 };
 
 const UploadFile: React.FC<{
-  base64?: string;
-  type?: string;
+  src?: string;
   label: string;
   accept: AcceptedFiles;
   onUpload: (fileData: FileData) => void;
-}> = ({
-  label,
-  accept,
-  onUpload,
-  base64: incomingBase64,
-  type: incomingType,
-}) => {
-  const [type, setType] = useState(incomingType);
-  const [base64, setBase64] = useState(incomingBase64);
+  rerender: number;
+}> = ({ label, accept, onUpload, src: incomingSrc, rerender }) => {
+  const [src, setSrc] = useState(incomingSrc);
+  const [type, setType] = useState("");
+  const [base64, setBase64] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (type && base64) {
       onUpload({
-        base64,
+        base64: base64.split(",")[1],
         type,
       });
     }
   }, [type, base64]);
 
+  useEffect(() => {
+    setBase64("");
+    setType("");
+    setSrc("");
+  }, [rerender]);
+
+  useEffect(() => {
+    setSrc(incomingSrc);
+  }, [incomingSrc]);
+
+  const uploadFile = useCallback(
+    async (event) => {
+      setLoading(true);
+      const files = event?.target?.files;
+
+      if (files?.length) {
+        const file = files[0];
+        const type = file.type.split("/")[1];
+
+        const base64 = await getBase64(file);
+
+        setType(type);
+        setBase64(base64);
+        console.log(base64);
+        setSrc(base64);
+      }
+
+      setLoading(false);
+    },
+    [type, base64, src]
+  );
+
   return (
-    <Stack spacing={4}>
-      <InputGroup>
-        <InputLeftAddon width={24} height={10}>
+    <Styled.CustomStack
+      spacing={4}
+      mt={2}
+      p={2}
+      border="dashed"
+      borderRadius="10"
+    >
+      <InputGroup justifyContent="center">
+        <InputLeftAddon
+          width={150}
+          display="flex"
+          justifyContent="center"
+          height={10}
+          borderRadius="10px !important"
+        >
           {label}
+          <FormLabel htmlFor={`${label}-file`}>
+            <HiOutlineUpload fontSize={24} />
+          </FormLabel>
         </InputLeftAddon>
         <Input
-          id="file"
+          id={`${label}-file`}
           type="file"
           disabled={loading}
           placeholder="phone number"
           padding={1}
           accept={`${accept}/*`}
-          onChange={async (event) => {
-            setLoading(true);
-            const files = event?.target?.files;
-
-            if (files?.length) {
-              const file = files[0];
-              const type = file.type.split("/")[1];
-
-              const base64 = await getBase64(file);
-
-              setBase64(base64);
-              setType(type);
-            }
-
-            setLoading(false);
-          }}
+          onChange={uploadFile}
         />
       </InputGroup>
-      {base64 ? Renders[accept](base64) : null}
-    </Stack>
+      {src ? (
+        <Styled.MediaPreview>{Renders[accept](src)}</Styled.MediaPreview>
+      ) : null}
+    </Styled.CustomStack>
   );
 };
 
