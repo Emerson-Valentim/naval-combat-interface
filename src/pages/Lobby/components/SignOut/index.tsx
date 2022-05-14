@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
+import { MenuItem } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import React, { useContext } from "react";
 
-import Button from "../../../../components/Button";
 import SocketContext from "../../../../context/Socket";
 import UserContext from "../../../../context/User";
 import tokenStorage from "../../../../utils/token-storage";
@@ -13,7 +13,7 @@ const SIGN_OUT_MUTATION = gql`
   }
 `;
 
-const SignOutButton: React.FC = () => {
+const SignOut: React.FC = () => {
   const { socket } = useContext(SocketContext);
   const { setAuthentication } = useContext(UserContext);
 
@@ -34,7 +34,7 @@ const SignOutButton: React.FC = () => {
     },
   });
 
-  return <Button onClick={() => singOut()}>Sair</Button>;
+  return <MenuItem onClick={() => singOut()}>Sair</MenuItem>;
 };
 
-export default SignOutButton;
+export default SignOut;
