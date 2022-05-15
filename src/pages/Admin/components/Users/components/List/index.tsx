@@ -4,6 +4,7 @@ import { gql } from "apollo-boost";
 import React, { useContext, useEffect } from "react";
 
 import FullscreenLoadingContext from "../../../../../../context/Loading";
+import RefetchContext from "../../../../../../context/Refetch";
 import UserContext, { User } from "../../../../../../context/User";
 import AddRoleButton from "../AddRoleButton";
 import CustomBadge from "../CustomBadge";
@@ -27,12 +28,17 @@ const List: React.FC = () => {
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
+  const { reload } = useContext(RefetchContext);
 
   const { user: agent } = useContext(UserContext);
 
   useEffect(() => {
     setFullscreenLoading(loading);
   }, [loading]);
+
+  useEffect(() => {
+    refetch();
+  }, [reload]);
 
   return (
     <Styled.List>
@@ -50,7 +56,7 @@ const List: React.FC = () => {
             return (
               <Tr key={index}>
                 <Td>{user.username}</Td>
-                <Td>{user.balance}</Td>
+                <Td width="30%">R$: {user.balance / 100}</Td>
                 <Styled.Badges>
                   <CustomBadge role="user" roles={user.roles} />
                   <CustomBadge role="maintainer" roles={user.roles} />

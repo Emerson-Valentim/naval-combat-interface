@@ -1,6 +1,6 @@
 import React from "react";
 
-import Credits from "./components/Credits";
+import Credits from "./components/Funds";
 import Skins from "./components/Skins";
 import Users from "./components/Users";
 import Styled from "./styled";
