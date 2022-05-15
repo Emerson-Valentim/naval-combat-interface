@@ -61,7 +61,7 @@ const Skins: React.FC<{ id?: string }> = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data?.getSkins?.map((skin: any, index: number) => {
+            {data?.getSkins?.map((skin: Skin, index: number) => {
               return (
                 <Tr
                   key={index}
