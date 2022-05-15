@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 
 import tokenStorage from "../../utils/token-storage";
 
-type Roles = "admin" | "user" | "maintainer";
+export type Roles = "admin" | "user" | "maintainer";
 
-interface User {
+export interface User {
   id: string;
   username: string;
   skin: {
@@ -14,6 +14,8 @@ interface User {
       avatar: string;
     };
   };
+  balance: number;
+  roles: Roles[];
 }
 
 interface UserContext {
@@ -40,6 +42,7 @@ const PROFILE = gql`
       id
       username
       roles
+      balance
       skin {
         current {
           avatar

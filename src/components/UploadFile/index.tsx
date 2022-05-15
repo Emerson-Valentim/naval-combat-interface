@@ -75,7 +75,6 @@ const UploadFile: React.FC<{
 
         setType(type);
         setBase64(base64);
-        console.log(base64);
         setSrc(base64);
       }
 
