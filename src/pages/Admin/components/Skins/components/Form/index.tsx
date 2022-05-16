@@ -1,11 +1,10 @@
 import { useMutation } from "@apollo/client";
-import { Divider, FormLabel, Input, Text } from "@chakra-ui/react";
+import { Divider, FormLabel, Input } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import { Formik, useFormik } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 
 import { Skin } from "../..";
-
 import Button from "../../../../../../components/Button";
 import UploadFile, { FileData } from "../../../../../../components/UploadFile";
 import FullscreenLoadingContext from "../../../../../../context/Loading";
@@ -26,9 +25,8 @@ const UPDATE_SKIN = gql`
 
 const Form: React.FC<{
   skin?: Skin;
-  refetch: () => void;
   resetSkin: () => void;
-}> = ({ skin: incomingSkin, refetch, resetSkin }) => {
+}> = ({ skin: incomingSkin, resetSkin }) => {
   const [skin, setSkin] = useState<Skin>();
   const [isEdit, setEdit] = useState(!!skin);
 
@@ -153,8 +151,6 @@ const Form: React.FC<{
       resetForm();
       resetSkin();
       resetUploader();
-
-      await refetch();
 
       setFullscreenLoading(false);
     },

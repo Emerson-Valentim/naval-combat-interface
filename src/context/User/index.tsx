@@ -12,6 +12,7 @@ export interface User {
   skin: {
     current: {
       avatar: string;
+      scenario: string;
     };
   };
   balance: number;
@@ -46,6 +47,7 @@ const PROFILE = gql`
       skin {
         current {
           avatar
+          scenario
         }
       }
     }

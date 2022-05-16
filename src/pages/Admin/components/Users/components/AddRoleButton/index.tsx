@@ -30,9 +30,8 @@ const UPDATE_ROLES = gql`
 const AddRoleButton: React.FC<{
   id: string;
   roles: Roles[];
-  refetch: () => void;
   disabled: boolean;
-}> = ({ id, roles: incomingRoles, refetch, disabled }) => {
+}> = ({ id, roles: incomingRoles, disabled }) => {
   const [roles, setRoles] = useState<Roles[]>(incomingRoles);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -65,8 +64,6 @@ const AddRoleButton: React.FC<{
       });
 
       setModalOpen(false);
-
-      await refetch();
     },
   });
 
