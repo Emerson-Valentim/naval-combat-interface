@@ -4,6 +4,7 @@ import { gql } from "apollo-boost";
 import React, { useContext, useEffect, useState } from "react";
 
 import FullscreenLoadingContext from "../../../../context/Loading";
+import SocketContext from "../../../../context/Socket";
 
 import DeleteSkinButton from "./components/DeleteSkinButton";
 import EditSkinButton from "./components/EditSkinButton";
@@ -40,6 +41,22 @@ const Skins: React.FC<{ id?: string }> = () => {
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
+  const { socket } = useContext(SocketContext);
+
+  useEffect(() => {
+    socket.on("client:skin:add", async () => {
+      await refetch();
+    });
+
+    socket.on("client:skin:update", async () => {
+      await refetch();
+    });
+
+    return () => {
+      socket.off("client:skin:add");
+      socket.off("client:skin:update");
+    };
+  }, []);
 
   useEffect(() => {
     setFullscreenLoading(loading);
@@ -49,7 +66,7 @@ const Skins: React.FC<{ id?: string }> = () => {
     setCurrentSkin(data?.getSkins[index]);
   };
 
-  return !loading ? (
+  return (
     <Styled.Box p={5} borderRadius={10}>
       <Styled.List>
         <Table variant="simple">
@@ -70,7 +87,7 @@ const Skins: React.FC<{ id?: string }> = () => {
                   }
                 >
                   <Td>{skin.name}</Td>
-                  <Td>{skin.cost}</Td>
+                  <Td>R$: {(skin.cost / 100).toFixed(2)}</Td>
                   <Styled.ButtonsColumn>
                     <EditSkinButton onClick={updateSkin} index={index} />
                     <DeleteSkinButton id={skin.id} refetch={refetch} />
@@ -82,14 +99,8 @@ const Skins: React.FC<{ id?: string }> = () => {
         </Table>
       </Styled.List>
       <Divider orientation="vertical" m={4} variant="solid" />
-      <Form
-        skin={currentSkin}
-        refetch={refetch}
-        resetSkin={() => updateSkin(-1)}
-      />
+      <Form skin={currentSkin} resetSkin={() => updateSkin(-1)} />
     </Styled.Box>
-  ) : (
-    <></>
   );
 };
 

@@ -3,7 +3,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useContext, useEffect } from "react";
 
 import FullscreenLoadingContext from "../../../../../../context/Loading";
-import UserContext from "../../../../../../context/User";
+import SocketContext from "../../../../../../context/Socket";
 import ApproveCreditButton from "../ApproveCreditButton";
 
 import Styled from "./styled";
@@ -30,6 +30,17 @@ const List: React.FC = () => {
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
+  const { socket } = useContext(SocketContext);
+
+  useEffect(() => {
+    socket.on("client:funds:approve", async () => {
+      await refetch();
+    });
+
+    socket.on("client:funds:request", async () => {
+      await refetch();
+    });
+  }, []);
 
   useEffect(() => {
     setFullscreenLoading(loading);
@@ -50,9 +61,9 @@ const List: React.FC = () => {
             return (
               <Tr key={index}>
                 <Td>{fund.username}</Td>
-                <Td>R$: {fund.value / 100}</Td>
+                <Td>R$: {(fund.value / 100).toFixed(2)}</Td>
                 <Td>
-                  <ApproveCreditButton id={fund.id} refetch={refetch} />
+                  <ApproveCreditButton id={fund.id} />
                 </Td>
               </Tr>
             );

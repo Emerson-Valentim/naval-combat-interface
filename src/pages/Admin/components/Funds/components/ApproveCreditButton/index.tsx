@@ -5,7 +5,6 @@ import { BsCheckLg } from "react-icons/bs";
 
 import Button from "../../../../../../components/Button";
 import FullscreenLoadingContext from "../../../../../../context/Loading";
-import RefetchContext from "../../../../../../context/Refetch";
 
 const APPROVE_CREDIT = gql`
   mutation approveFunds($input: ApproveFundsInput!) {
@@ -13,17 +12,12 @@ const APPROVE_CREDIT = gql`
   }
 `;
 
-const ApproveCreditButton: React.FC<{ id: string; refetch: () => void }> = ({
-  id,
-  refetch,
-}) => {
+const ApproveCreditButton: React.FC<{ id: string }> = ({ id }) => {
   const [approveCredit, { loading }] = useMutation(APPROVE_CREDIT);
 
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
-
-  const { refetch: contextRefetch } = useContext(RefetchContext);
 
   useEffect(() => {
     setFullscreenLoading(loading);
@@ -39,10 +33,6 @@ const ApproveCreditButton: React.FC<{ id: string; refetch: () => void }> = ({
             },
           },
         });
-
-        contextRefetch();
-
-        await refetch();
       }}
     >
       <BsCheckLg color="black" />
