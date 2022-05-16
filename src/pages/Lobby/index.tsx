@@ -64,11 +64,6 @@ export default function withAction() {
               display={{ base: "none", md: "flex" }}
             >
               <TabList>
-                {isMaintainer || isAdmin ? (
-                  <Tab onClick={() => navigate("/admin")}>
-                    Painel de Controle
-                  </Tab>
-                ) : null}
                 <Tab>Lobby</Tab>
                 <Tab>Skins</Tab>
               </TabList>
@@ -79,12 +74,20 @@ export default function withAction() {
             <Spacer marginRight={4} />
             <Menu>
               <MenuButton as={Button} minW={0} background="transparent">
-                <Avatar size={"sm"} src={user?.skin?.current?.avatar} />
+                <Avatar
+                  size={"sm"}
+                  src={user?.skin?.current?.avatar}
+                  border={isMaintainer ? "2px" : "transparent"}
+                  style={{ borderColor: isMaintainer ? "blue" : "red" }}
+                />
               </MenuButton>
               <MenuList>
-                <MenuItem>
-                  <SignOut />
-                </MenuItem>
+                {isAdmin ? (
+                  <MenuItem onClick={() => navigate("/admin")}>
+                    Painel de controle
+                  </MenuItem>
+                ) : null}
+                <SignOut />
               </MenuList>
             </Menu>
           </Flex>
@@ -94,6 +97,8 @@ export default function withAction() {
         <TabPanels>
           <TabPanel>
             <RoomList />
+          </TabPanel>
+          <TabPanel>
             <Skins />
           </TabPanel>
         </TabPanels>
