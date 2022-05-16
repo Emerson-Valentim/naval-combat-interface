@@ -4,7 +4,6 @@ import { gql } from "apollo-boost";
 import React, { useContext, useEffect } from "react";
 
 import FullscreenLoadingContext from "../../../../../../context/Loading";
-import RefetchContext from "../../../../../../context/Refetch";
 import SocketContext from "../../../../../../context/Socket";
 import UserContext, { User } from "../../../../../../context/User";
 import AddRoleButton from "../AddRoleButton";
