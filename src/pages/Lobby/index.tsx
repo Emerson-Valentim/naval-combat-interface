@@ -16,6 +16,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
@@ -23,10 +24,11 @@ import { useNavigate } from "react-router-dom";
 
 import UserContext from "../../context/User";
 
+import Skins from "../Skins";
+
 import CreateRoomButton from "./components/CreateRoomButton";
 import RoomList from "./components/RoomList";
 import SignOut from "./components/SignOut";
-import Skins from "./components/Skins";
 import Styled from "./styled";
 
 export default function withAction() {
@@ -82,6 +84,9 @@ export default function withAction() {
                 />
               </MenuButton>
               <MenuList>
+                <MenuItem>
+                  <Text>Saldo R$: {(user?.balance / 100).toFixed(2)}</Text>
+                </MenuItem>
                 {isAdmin ? (
                   <MenuItem onClick={() => navigate("/admin")}>
                     Painel de controle
@@ -94,11 +99,11 @@ export default function withAction() {
         </Flex>
       </Box>
       <Styled.Container>
-        <TabPanels>
-          <TabPanel>
+        <TabPanels height="100%">
+          <TabPanel height="100%">
             <RoomList />
           </TabPanel>
-          <TabPanel>
+          <TabPanel height="100%">
             <Skins />
           </TabPanel>
         </TabPanels>
