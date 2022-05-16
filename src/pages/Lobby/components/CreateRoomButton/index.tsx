@@ -94,7 +94,11 @@ const CreateRoomButton: React.FC = () => {
 
   return (
     <>
-      <Button disabled={loading} onClick={() => setModalOpen(true)}>
+      <Button
+        disabled={loading}
+        onClick={() => setModalOpen(true)}
+        background="transparent"
+      >
         Criar sala
       </Button>
       <Modal

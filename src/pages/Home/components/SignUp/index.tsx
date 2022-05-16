@@ -1,51 +1,62 @@
-import React, { useContext, useEffect } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import {
+  FormLabel,
+  Button,
   Alert,
   AlertDescription,
   AlertIcon,
   AlertTitle,
-  FormLabel,
 } from "@chakra-ui/react";
-import { Formik, useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { gql } from "apollo-boost";
+import { useFormik, Formik } from "formik";
+import React, { useContext, useEffect, useState } from "react";
 
-import FullscreenLoadingContext from "../../../context/Loading";
-import Button from "../../../components/Button";
-import UserContext from "../../../context/User";
-import tokenStorage from "../../../utils/token-storage";
-
-import HomeInput from "../components/Input";
+import FullscreenLoadingContext from "../../../../context/Loading";
+import HomeInput from "../Input";
 
 import Styled from "./styled";
 
-const SIGN_IN_MUTATION = gql`
-  mutation signIn($input: SignInInput!) {
-    signIn(input: $input) {
-      accessToken
-      refreshToken
+type CreateStatus = "success" | "error";
+
+const CREATE_USER_MUTATION = gql`
+  mutation createUser($input: CreateUserInput!) {
+    createUser(input: $input) {
+      username
     }
   }
 `;
 
-const SignIn: React.FC = () => {
-  const navigate = useNavigate();
-  const [signIn, { loading, data, error }] = useMutation(SIGN_IN_MUTATION);
+const STATUS_DICTIONARY: {
+  [key in CreateStatus]: {
+    title: string;
+    message: string;
+  };
+} = {
+  success: {
+    title: "Usuário criado com sucesso!",
+    message: "Agora é só realizar o login e se divertir!",
+  },
+  error: {
+    title: "Poxa, tivemos um erro",
+    message: "Verifique as informações que você enviou e tente novamente.",
+  },
+};
+
+const SignUp: React.FC = () => {
+  const [status, setStatus] = useState<CreateStatus | "">("");
+  const [createUser, { loading, data, error }] =
+    useMutation(CREATE_USER_MUTATION);
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
-  const { setAuthentication } = useContext(UserContext);
 
   useEffect(() => {
-    if (data) {
-      tokenStorage.set(JSON.stringify(data.signIn));
-
+    if (data || error) {
       setFullscreenLoading(false);
-      setAuthentication(true);
 
-      navigate("/lobby");
+      setStatus(!error ? "success" : "error");
     }
-  }, [data]);
+  }, [data, error]);
 
   useEffect(() => {
     setFullscreenLoading(loading);
@@ -55,13 +66,16 @@ const SignIn: React.FC = () => {
     initialValues: {
       email: "email@email.com",
       password: "password",
+      username: "username",
     },
     onSubmit: (values): void => {
-      signIn({
+      setStatus("");
+      createUser({
         variables: {
           input: {
             email: values.email,
             password: values.password,
+            username: values.username,
           },
         },
       });
@@ -78,6 +92,13 @@ const SignIn: React.FC = () => {
           value={values.email}
           onChange={handleChange}
         />
+        <FormLabel htmlFor="username">Apelido</FormLabel>
+        <HomeInput
+          id="username"
+          type="text"
+          value={values.username}
+          onChange={handleChange}
+        />
         <FormLabel htmlFor="password">Senha</FormLabel>
         <HomeInput
           id="password"
@@ -85,12 +106,12 @@ const SignIn: React.FC = () => {
           value={values.password}
           onChange={handleChange}
         />
-        <Button mt={4} type="submit" id="sign-in-submit">
-          Entrar
+        <Button mt={4} type="submit" id="sign-up-submit">
+          Registrar
         </Button>
-        {error && (
+        {status && (
           <Alert
-            status="error"
+            status={status}
             variant="subtle"
             flexDirection="column"
             alignItems="center"
@@ -103,10 +124,10 @@ const SignIn: React.FC = () => {
           >
             <AlertIcon boxSize="40px" mr={0} />
             <AlertTitle mt={4} mb={1} fontSize="lg">
-              Poxa, tivemos um erro
+              {STATUS_DICTIONARY[status].title}
             </AlertTitle>
             <AlertDescription maxWidth="sm">
-              Verifique as informações que você enviou e tente novamente
+              {STATUS_DICTIONARY[status].message}
             </AlertDescription>
           </Alert>
         )}
@@ -115,4 +136,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

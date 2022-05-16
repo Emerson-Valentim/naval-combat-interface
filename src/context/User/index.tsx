@@ -1,17 +1,36 @@
-import { useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { gql } from "apollo-boost";
 import React, { useEffect, useState } from "react";
 
 import tokenStorage from "../../utils/token-storage";
 
-interface User {
+export type Roles = "admin" | "user" | "maintainer";
+
+export interface User {
   id: string;
   username: string;
+  skin: {
+    current: {
+      avatar: string;
+    };
+  };
+  balance: number;
+  roles: Roles[];
 }
 
-const UserContext = React.createContext({
+interface UserContext {
+  isAuthenticated: boolean;
+  setAuthentication: (value: boolean) => void;
+  roles: Roles[];
+  setRoles: (roles: Roles[]) => void;
+  user: User;
+}
+
+const UserContext = React.createContext<UserContext>({
   isAuthenticated: false,
   setAuthentication: undefined as any,
+  roles: [],
+  setRoles: undefined as any,
   user: undefined as any as User,
 });
 
@@ -22,21 +41,23 @@ const PROFILE = gql`
     profile {
       id
       username
+      roles
+      balance
+      skin {
+        current {
+          avatar
+        }
+      }
     }
   }
 `;
 
 const UserContextProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<User>();
-  const [isAuthenticated, setAuthentication] = useState(false);
+  const [roles, setRoles] = useState<Roles[]>([]);
+  const [isAuthenticated, setAuthentication] = useState(!!tokenStorage.get());
 
-  const [profile, { data }] = useLazyQuery(PROFILE);
-
-  const authenticationState = tokenStorage.get();
-
-  useEffect(() => {
-    setAuthentication(!!authenticationState);
-  }, [authenticationState]);
+  const { data, error, refetch: profile } = useQuery(PROFILE);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -47,14 +68,23 @@ const UserContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (data) {
       setUser(data.profile);
+      setRoles(data.profile.roles);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      tokenStorage.delete();
+    }
+  }, [error]);
 
   return (
     <UserContext.Provider
       value={{
         isAuthenticated,
         setAuthentication,
+        roles,
+        setRoles,
         user: user as User,
       }}
     >

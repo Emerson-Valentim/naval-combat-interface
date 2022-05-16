@@ -1,62 +1,57 @@
-import { useMutation } from "@apollo/client";
+import React, { useContext, useEffect } from "react";
+import { gql, useMutation } from "@apollo/client";
 import {
-  FormLabel,
-  Button,
   Alert,
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  FormLabel,
 } from "@chakra-ui/react";
-import { gql } from "apollo-boost";
-import { useFormik, Formik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import { Formik, useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
-import FullscreenLoadingContext from "../../../context/Loading";
-import HomeInput from "../components/Input";
+import FullscreenLoadingContext from "../../../../context/Loading";
+import Button from "../../../../components/Button";
+import UserContext from "../../../../context/User";
+import tokenStorage from "../../../../utils/token-storage";
+
+import HomeInput from "../Input";
 
 import Styled from "./styled";
 
-type CreateStatus = "success" | "error";
-
-const CREATE_USER_MUTATION = gql`
-  mutation createUser($input: CreateUserInput!) {
-    createUser(input: $input) {
-      username
+const SIGN_IN_MUTATION = gql`
+  mutation signIn($input: SignInInput!) {
+    signIn(input: $input) {
+      tokens {
+        accessToken
+        refreshToken
+      }
+      roles
     }
   }
 `;
 
-const STATUS_DICTIONARY: {
-  [key in CreateStatus]: {
-    title: string;
-    message: string;
-  };
-} = {
-  success: {
-    title: "Usuário criado com sucesso!",
-    message: "Agora é só realizar o login e se divertir!",
-  },
-  error: {
-    title: "Poxa, tivemos um erro",
-    message: "Verifique as informações que você enviou e tente novamente.",
-  },
-};
-
-const SignUp: React.FC = () => {
-  const [status, setStatus] = useState<CreateStatus | "">("");
-  const [createUser, { loading, data, error }] =
-    useMutation(CREATE_USER_MUTATION);
+const SignIn: React.FC = () => {
+  const navigate = useNavigate();
+  const [signIn, { loading, data, error }] = useMutation(SIGN_IN_MUTATION);
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
+  const { setAuthentication, setRoles } = useContext(UserContext);
 
   useEffect(() => {
-    if (data || error) {
-      setFullscreenLoading(false);
+    if (data) {
+      const { roles, tokens } = data.signIn;
 
-      setStatus(!error ? "success" : "error");
+      tokenStorage.set(JSON.stringify(tokens));
+
+      setFullscreenLoading(false);
+      setAuthentication(true);
+      setRoles(roles);
+
+      navigate("/lobby");
     }
-  }, [data, error]);
+  }, [data]);
 
   useEffect(() => {
     setFullscreenLoading(loading);
@@ -66,16 +61,13 @@ const SignUp: React.FC = () => {
     initialValues: {
       email: "email@email.com",
       password: "password",
-      username: "username",
     },
     onSubmit: (values): void => {
-      setStatus("");
-      createUser({
+      signIn({
         variables: {
           input: {
             email: values.email,
             password: values.password,
-            username: values.username,
           },
         },
       });
@@ -92,13 +84,6 @@ const SignUp: React.FC = () => {
           value={values.email}
           onChange={handleChange}
         />
-        <FormLabel htmlFor="username">Apelido</FormLabel>
-        <HomeInput
-          id="username"
-          type="text"
-          value={values.username}
-          onChange={handleChange}
-        />
         <FormLabel htmlFor="password">Senha</FormLabel>
         <HomeInput
           id="password"
@@ -106,12 +91,12 @@ const SignUp: React.FC = () => {
           value={values.password}
           onChange={handleChange}
         />
-        <Button mt={4} type="submit" id="sign-up-submit">
-          Registrar
+        <Button mt={4} type="submit" id="sign-in-submit">
+          Entrar
         </Button>
-        {status && (
+        {error && (
           <Alert
-            status={status}
+            status="error"
             variant="subtle"
             flexDirection="column"
             alignItems="center"
@@ -124,10 +109,10 @@ const SignUp: React.FC = () => {
           >
             <AlertIcon boxSize="40px" mr={0} />
             <AlertTitle mt={4} mb={1} fontSize="lg">
-              {STATUS_DICTIONARY[status].title}
+              Poxa, tivemos um erro
             </AlertTitle>
             <AlertDescription maxWidth="sm">
-              {STATUS_DICTIONARY[status].message}
+              Verifique as informações que você enviou e tente novamente
             </AlertDescription>
           </Alert>
         )}
@@ -136,4 +121,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

@@ -11,22 +11,25 @@ import apolloClient from "./ports/apollo/apollo";
 import { UserContextProvider } from "./context/User";
 import { FullscreenLoadingContextProvider } from "./context/Loading";
 import { SocketContextProvider } from "./context/Socket";
+import { RefetchContextProvider } from "./context/Refetch";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={apolloClient}>
-      <ChakraProvider>
+    <RefetchContextProvider>
+      <ApolloProvider client={apolloClient}>
         <UserContextProvider>
-          <SocketContextProvider>
-            <FullscreenLoadingContextProvider>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </FullscreenLoadingContextProvider>
-          </SocketContextProvider>
+          <ChakraProvider>
+            <SocketContextProvider>
+              <FullscreenLoadingContextProvider>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </FullscreenLoadingContextProvider>
+            </SocketContextProvider>
+          </ChakraProvider>
         </UserContextProvider>
-      </ChakraProvider>
-    </ApolloProvider>
+      </ApolloProvider>
+    </RefetchContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
