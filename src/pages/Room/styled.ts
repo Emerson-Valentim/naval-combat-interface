@@ -22,6 +22,10 @@ const RoomBox = styled(Box)`
   min-width: 100vw;
 `;
 
+const Room = styled(Box)`
+  flex: 1;
+`;
+
 const RoomWidgets = styled(Box)`
   display: flex;
 
@@ -32,4 +36,5 @@ export default {
   RoomTitle,
   RoomWidgets,
   RoomBox,
+  Room,
 };
