@@ -17,8 +17,6 @@ const List = styled.div`
 `;
 
 const ButtonsColumn = styled(Td)`
-  display: flex;
-
   button {
     margin: 4px;
   }

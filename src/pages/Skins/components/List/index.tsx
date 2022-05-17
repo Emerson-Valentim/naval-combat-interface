@@ -4,6 +4,7 @@ import { gql } from "apollo-boost";
 import React, { useContext, useEffect } from "react";
 
 import FullscreenLoadingContext from "../../../../context/Loading";
+import SocketContext from "../../../../context/Socket";
 import UserContext from "../../../../context/User";
 import { Skin } from "../../../Admin/components/Skins";
 import BuySkinButton from "../BuySkinButton";
@@ -25,12 +26,28 @@ const GET_SKINS = gql`
 `;
 
 const List: React.FC = () => {
-  const { data, loading } = useQuery(GET_SKINS);
+  const { data, loading, refetch } = useQuery(GET_SKINS);
 
   const { setLoading: setFullscreenLoading } = useContext(
     FullscreenLoadingContext
   );
   const { user } = useContext(UserContext);
+  const { socket } = useContext(SocketContext);
+
+  useEffect(() => {
+    socket.on("client:skin:add", async () => {
+      await refetch();
+    });
+
+    socket.on("client:skin:update", async () => {
+      await refetch();
+    });
+
+    return () => {
+      socket.off("client:skin:add");
+      socket.off("client:skin:update");
+    };
+  }, []);
 
   useEffect(() => {
     setFullscreenLoading(loading);
@@ -60,7 +77,7 @@ const List: React.FC = () => {
                   <Td width="20%">{skin.name}</Td>
                   <Td>R$: {(skin.cost / 100).toFixed(2)}</Td>
                   <Td width="20%">
-                    <Image src={skin.avatar} width="30%" />
+                    <Image src={skin.avatar} width="40%" />
                   </Td>
                   <Td width="20%">
                     <Image src={skin.scenario} />
@@ -68,7 +85,7 @@ const List: React.FC = () => {
                   <Styled.ButtonsColumn>
                     <BuySkinButton disabled={isSkinBought} id={skin.id} />
                     <SelectSkinButton
-                      disabled={isSkinBought && isCurrentSkin}
+                      disabled={!isSkinBought || isCurrentSkin}
                       current={isCurrentSkin}
                       id={skin.id}
                     />
