@@ -40,6 +40,11 @@ const List: React.FC = () => {
     socket.on("client:funds:request", async () => {
       await refetch();
     });
+
+    return () => {
+      socket.off("client:funds:approve");
+      socket.off("client:funds:request");
+    };
   }, []);
 
   useEffect(() => {
