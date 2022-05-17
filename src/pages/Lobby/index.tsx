@@ -22,6 +22,8 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import SocketContext from "../../context/Socket";
+
 import UserContext from "../../context/User";
 
 import Skins from "../Skins";
@@ -32,7 +34,8 @@ import SignOut from "./components/SignOut";
 import Styled from "./styled";
 
 export default function withAction() {
-  const { user, roles } = useContext(UserContext);
+  const { socket } = useContext(SocketContext);
+  const { user, roles, refetch: profile } = useContext(UserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [isAdmin, setAdmin] = useState(false);
@@ -47,6 +50,16 @@ export default function withAction() {
     setAdmin(isAdmin);
     setMaintainer(isMaintainer);
   }, [roles]);
+
+  useEffect(() => {
+    socket.on("client:funds:approve", async () => {
+      await profile();
+    });
+
+    return () => {
+      socket.off("client:funds:approve");
+    };
+  }, []);
 
   return (
     <Tabs variant="unstyled">

@@ -31,7 +31,6 @@ const Request: React.FC = () => {
       value: 0,
     },
     onSubmit: async (values: any) => {
-      console.log(values);
       await requestFunds({
         variables: {
           input: {
