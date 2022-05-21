@@ -3,7 +3,6 @@ import { FormLabel } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import { Form, Formik, useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
-import InputMask from "react-number-format";
 
 import Button from "../../../../components/Button";
 import FullscreenLoadingContext from "../../../../context/Loading";
@@ -16,7 +15,7 @@ const REQUEST_FUNDS = gql`
   }
 `;
 
-const Skins: React.FC = () => {
+const Request: React.FC = () => {
   const [requestFunds, { loading }] = useMutation(REQUEST_FUNDS);
 
   const { setLoading: setFullscreenLoading } = useContext(
@@ -32,7 +31,6 @@ const Skins: React.FC = () => {
       value: 0,
     },
     onSubmit: async (values: any) => {
-      console.log(values);
       await requestFunds({
         variables: {
           input: {
@@ -51,20 +49,25 @@ const Skins: React.FC = () => {
       >
         <Form>
           <FormLabel htmlFor="value">Valor R$</FormLabel>
-          <InputMask
+          <Styled.Input
             id="value"
             defaultValue={0}
+            placeholder="R$ 10.00"
+            prefix="R$ "
             onValueChange={(values) => {
               const { value } = values;
 
               if (value.includes(".")) {
-                setFieldValue("value", value.replace(/\D/g, ""));
+                setFieldValue(
+                  "value",
+                  value.replace("R$ ", "").replace(/\D/g, "")
+                );
               }
 
               setFieldValue("value", +value * 100);
             }}
             thousandSeparator
-          ></InputMask>
+          ></Styled.Input>
           <Button type="submit" marginTop={4} disabled={values.value <= 0}>
             Solicitar
           </Button>
@@ -74,4 +77,4 @@ const Skins: React.FC = () => {
   );
 };
 
-export default Skins;
+export default Request;

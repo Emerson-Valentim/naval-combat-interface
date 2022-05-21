@@ -18,15 +18,15 @@ ReactDOM.render(
     <RefetchContextProvider>
       <ApolloProvider client={apolloClient}>
         <UserContextProvider>
-          <ChakraProvider>
-            <SocketContextProvider>
+          <SocketContextProvider>
+            <ChakraProvider>
               <FullscreenLoadingContextProvider>
                 <BrowserRouter>
                   <App />
                 </BrowserRouter>
               </FullscreenLoadingContextProvider>
-            </SocketContextProvider>
-          </ChakraProvider>
+            </ChakraProvider>
+          </SocketContextProvider>
         </UserContextProvider>
       </ApolloProvider>
     </RefetchContextProvider>

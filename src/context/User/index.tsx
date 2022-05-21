@@ -11,9 +11,11 @@ export interface User {
   username: string;
   skin: {
     current: {
+      id: string;
       avatar: string;
       scenario: string;
     };
+    available: string[];
   };
   balance: number;
   roles: Roles[];
@@ -25,6 +27,7 @@ interface UserContext {
   roles: Roles[];
   setRoles: (roles: Roles[]) => void;
   user: User;
+  refetch: () => void;
 }
 
 const UserContext = React.createContext<UserContext>({
@@ -33,6 +36,7 @@ const UserContext = React.createContext<UserContext>({
   roles: [],
   setRoles: undefined as any,
   user: undefined as any as User,
+  refetch: undefined as any,
 });
 
 UserContext.displayName = "User";
@@ -46,9 +50,11 @@ const PROFILE = gql`
       balance
       skin {
         current {
+          id
           avatar
           scenario
         }
+        available
       }
     }
   }
@@ -88,6 +94,7 @@ const UserContextProvider: React.FC = ({ children }) => {
         roles,
         setRoles,
         user: user as User,
+        refetch: profile,
       }}
     >
       {children}
