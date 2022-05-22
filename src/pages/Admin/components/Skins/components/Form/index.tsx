@@ -1,14 +1,9 @@
 import { useMutation } from "@apollo/client";
+import { cloneDeep } from "@apollo/client/utilities";
 import { Divider, FormLabel, Input } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import { Formik, useFormik } from "formik";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { Skin } from "../..";
 import Button from "../../../../../../components/Button";
@@ -56,7 +51,6 @@ const Form: React.FC<{
   const [files, setFiles] = useState<{
     [key: string]: FileData;
   }>({});
-  const [medias, setMedias] = useState<{ sounds: any; images: any }>();
 
   const [rerender, updateRerender] = useState(0);
 
@@ -137,47 +131,18 @@ const Form: React.FC<{
 
   const [addSkin, { loading: addLoading }] = useMutation(ADD_SKIN, {
     onCompleted: async (data) => {
-      setFullscreenLoading(true);
-
-      updateMedias(data.addSkin.id);
-
-      setFiles({});
-      setFullscreenLoading(false);
+      await updateSkin({
+        variables: {
+          input: {
+            id: data?.addSkin?.id,
+            status: "ACTIVE",
+          },
+        },
+      });
     },
   });
 
   const [updateSkin, { loading: updateLoading }] = useMutation(UPDATE_SKIN);
-
-  const updateMedias = useCallback(
-    async (skinId: string) => {
-      if (medias) {
-        for (const [section, sectionMedia] of Object.entries(medias)) {
-          for (const [media, value] of Object.entries(sectionMedia)) {
-            await updateSkin({
-              variables: {
-                input: {
-                  id: skinId,
-                  [section]: {
-                    [media]: value,
-                  },
-                },
-              },
-            });
-          }
-        }
-
-        await updateSkin({
-          variables: {
-            input: {
-              id: skinId,
-              status: "ACTIVE",
-            },
-          },
-        });
-      }
-    },
-    [medias]
-  );
 
   const {
     values,
@@ -220,8 +185,6 @@ const Form: React.FC<{
         }
       });
 
-      setMedias({ sounds, images });
-
       if (isEdit && skin) {
         await updateSkin({
           variables: {
@@ -229,21 +192,26 @@ const Form: React.FC<{
               id: skin!.id,
               cost: input.cost,
               name: input.packageName,
+              sounds,
+              images,
             },
           },
         });
-
-        await updateMedias(skin.id);
       } else {
         await addSkin({
           variables: {
-            input,
+            input: {
+              ...input,
+              sounds,
+              images,
+            },
           },
         });
       }
 
       resetForm();
       resetSkin();
+      setFiles({});
       resetUploader();
 
       setFullscreenLoading(false);
@@ -284,9 +252,11 @@ const Form: React.FC<{
               label={item.label}
               accept={item.accept}
               onUpload={(value) => {
-                files[item.prop] = value;
+                const fileClone = cloneDeep(files);
 
-                setFiles(files);
+                fileClone[item.prop] = value;
+
+                setFiles(fileClone);
               }}
               // @ts-expect-error prop cant be typed
               src={isEdit && skin ? skin[item.prop] : ""}
@@ -309,7 +279,13 @@ const Form: React.FC<{
           <Button
             justifySelf="baseline"
             type="submit"
-            disabled={isEdit ? updateLoading : addLoading}
+            disabled={
+              isEdit
+                ? updateLoading
+                : addLoading ||
+                  Object.values(files).length <
+                    [...soundAlias, ...imageAlias].length
+            }
           >
             {skin ? "Atualizar" : "Cadastrar"}
           </Button>
