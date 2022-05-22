@@ -16,12 +16,6 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          
-          aws-region: ${{ env.REGION }}
-
       - name: Create env file
         uses: SpicyPizza/create-envfile@v1.3
         with:
