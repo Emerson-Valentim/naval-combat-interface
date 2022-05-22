@@ -79,17 +79,35 @@ const Form: React.FC<{
   };
 
   const [addSkin, { loading: addLoading }] = useMutation(ADD_SKIN, {
-    onCompleted: (data) => {
+    onCompleted: async (data) => {
       setFullscreenLoading(true);
-      updateSkin({
+
+      if (medias) {
+        for (const [section, sectionMedia] of Object.entries(medias)) {
+          for (const [media, value] of Object.entries(sectionMedia)) {
+            await updateSkin({
+              variables: {
+                input: {
+                  id: data.addSkin.id,
+                  [section]: {
+                    [media]: value,
+                  },
+                },
+              },
+            });
+          }
+        }
+      }
+
+      await updateSkin({
         variables: {
           input: {
             id: data.addSkin.id,
-            ...medias,
             status: "ACTIVE",
           },
         },
       });
+
       setFullscreenLoading(false);
     },
   });
