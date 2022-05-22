@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "../../../../components/Button";
 import { parseBuffer } from "../../../../utils/buffer-parser";
-import FullscreenLoadingContext from "../../../../context/Loading";
+import FullscreenLoadingContext from "../../../../context/3";
 import SocketContext from "../../../../context/Socket";
 
 const CREATE_ROOM = gql`

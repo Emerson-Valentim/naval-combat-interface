@@ -23,15 +23,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.REGION }}
 
-      - name: Install dependencies 
-        run: yarn
-
       - name: Create env file
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_REACT_APP_SOCKET_HOST: https://stg.evshosting.net/naval-combat
           envkey_REACT_APP_SOCKET_PORT: 443
           envkey_REACT_APP_SERVICE_HOST: https://naval-combat-notification.evshosting.net
+
+      - name: Install dependencies 
+        run: yarn
 
       - name: Build app
         run: yarn build

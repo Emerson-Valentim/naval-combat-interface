@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Skin } from "../..";
 import Button from "../../../../../../components/Button";
 import UploadFile, { FileData } from "../../../../../../components/UploadFile";
-import FullscreenLoadingContext from "../../../../../../context/Loading";
+import FullscreenLoadingContext from "../../../../../../context/3";
 
 import Styled from "./styled";
 

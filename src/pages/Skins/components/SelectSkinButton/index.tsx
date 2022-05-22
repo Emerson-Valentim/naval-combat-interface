@@ -4,7 +4,7 @@ import React, { useContext, useEffect } from "react";
 import { BiSelectMultiple } from "react-icons/bi";
 
 import Button from "../../../../components/Button";
-import FullscreenLoadingContext from "../../../../context/Loading";
+import FullscreenLoadingContext from "../../../../context/3";
 import UserContext from "../../../../context/User";
 
 const SELECT_SKIN = gql`

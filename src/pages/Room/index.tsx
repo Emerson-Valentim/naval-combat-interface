@@ -3,7 +3,7 @@ import { gql } from "apollo-boost";
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
-import FullscreenLoadingContext from "../../context/Loading";
+import FullscreenLoadingContext from "../../context/3";
 import SocketContext from "../../context/Socket";
 import UserContext from "../../context/User";
 
