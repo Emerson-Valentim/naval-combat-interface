@@ -2,7 +2,13 @@ import { useMutation } from "@apollo/client";
 import { Divider, FormLabel, Input } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import { Formik, useFormik } from "formik";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { Skin } from "../..";
 import Button from "../../../../../../components/Button";
@@ -133,13 +139,24 @@ const Form: React.FC<{
     onCompleted: async (data) => {
       setFullscreenLoading(true);
 
+      updateMedias(data.addSkin.id);
+
+      setFiles({});
+      setFullscreenLoading(false);
+    },
+  });
+
+  const [updateSkin, { loading: updateLoading }] = useMutation(UPDATE_SKIN);
+
+  const updateMedias = useCallback(
+    async (skinId: string) => {
       if (medias) {
         for (const [section, sectionMedia] of Object.entries(medias)) {
           for (const [media, value] of Object.entries(sectionMedia)) {
             await updateSkin({
               variables: {
                 input: {
-                  id: data.addSkin.id,
+                  id: skinId,
                   [section]: {
                     [media]: value,
                   },
@@ -148,22 +165,19 @@ const Form: React.FC<{
             });
           }
         }
-      }
 
-      await updateSkin({
-        variables: {
-          input: {
-            id: data.addSkin.id,
-            status: "ACTIVE",
+        await updateSkin({
+          variables: {
+            input: {
+              id: skinId,
+              status: "ACTIVE",
+            },
           },
-        },
-      });
-
-      setFiles({});
-      setFullscreenLoading(false);
+        });
+      }
     },
-  });
-  const [updateSkin, { loading: updateLoading }] = useMutation(UPDATE_SKIN);
+    [medias]
+  );
 
   const {
     values,
@@ -208,25 +222,25 @@ const Form: React.FC<{
 
       setMedias({ sounds, images });
 
-      const operation = isEdit
-        ? updateSkin({
-            variables: {
-              input: {
-                id: skin!.id,
-                cost: input.cost,
-                name: input.packageName,
-                images: Object.values(images).length ? images : undefined,
-                sounds: Object.values(sounds).length ? sounds : undefined,
-              },
+      if (isEdit && skin) {
+        await updateSkin({
+          variables: {
+            input: {
+              id: skin!.id,
+              cost: input.cost,
+              name: input.packageName,
             },
-          })
-        : addSkin({
-            variables: {
-              input,
-            },
-          });
+          },
+        });
 
-      await operation;
+        await updateMedias(skin.id);
+      } else {
+        await addSkin({
+          variables: {
+            input,
+          },
+        });
+      }
 
       resetForm();
       resetSkin();
