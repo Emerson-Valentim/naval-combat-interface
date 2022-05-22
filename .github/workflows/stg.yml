@@ -7,10 +7,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    container: node:14
 
     steps:
       - name: Install dependencies 
-        uses: yarn
+        run: yarn
 
       - name: Create env file
         uses: SpicyPizza/create-envfile@v1.3
@@ -20,8 +21,8 @@ jobs:
           envkey_REACT_APP_SERVICE_HOST=https://naval-combat-notification.evshosting.net
 
       - name: Build app
-        uses: yarn build
+        run: yarn build
 
       - name: Deploy app
-        uses:
+        run:
           - aws s3 cp --recursive ./build/ s3://evs-react/
