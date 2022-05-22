@@ -37,7 +37,8 @@ jobs:
 
       - name: Deploy app
         uses: shallwefootball/s3-upload-action@master
-        aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_bucket: evs-react
-        source_dir: "build"
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: evs-react
+          source_dir: "build"
