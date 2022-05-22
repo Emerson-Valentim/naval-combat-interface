@@ -26,9 +26,9 @@ jobs:
       - name: Create env file
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          envkey_REACT_APP_SOCKET_HOST: https://stg.evshosting.net/naval-combat
+          envkey_REACT_APP_SOCKET_HOST: https://naval-combat-notification.evshosting.net
           envkey_REACT_APP_SOCKET_PORT: 443
-          envkey_REACT_APP_SERVICE_HOST: https://naval-combat-notification.evshosting.net
+          envkey_REACT_APP_SERVICE_HOST: https://stg.evshosting.net/naval-combat
 
       - name: Install dependencies 
         run: yarn
