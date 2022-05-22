@@ -21,6 +21,7 @@
   ],
   "plugins": ["@typescript-eslint", "react-hooks"],
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
     "no-undef": "error",
     "import/order": [
       "error",
