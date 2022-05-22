@@ -59,8 +59,8 @@ const SignIn: React.FC = () => {
 
   const { initialValues, values, handleSubmit, handleChange } = useFormik({
     initialValues: {
-      email: "email@email.com",
-      password: "password",
+      email: "",
+      password: "",
     },
     onSubmit: (values): void => {
       signIn({
@@ -91,7 +91,12 @@ const SignIn: React.FC = () => {
           value={values.password}
           onChange={handleChange}
         />
-        <Button mt={4} type="submit" id="sign-in-submit">
+        <Button
+          mt={4}
+          type="submit"
+          id="sign-in-submit"
+          disabled={loading || !values.email || !values.password}
+        >
           Entrar
         </Button>
         {error && (

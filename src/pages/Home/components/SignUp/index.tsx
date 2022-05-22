@@ -64,9 +64,9 @@ const SignUp: React.FC = () => {
 
   const { initialValues, values, handleSubmit, handleChange } = useFormik({
     initialValues: {
-      email: "email@email.com",
-      password: "password",
-      username: "username",
+      email: "",
+      password: "",
+      username: "",
     },
     onSubmit: (values): void => {
       setStatus("");
@@ -106,7 +106,14 @@ const SignUp: React.FC = () => {
           value={values.password}
           onChange={handleChange}
         />
-        <Button mt={4} type="submit" id="sign-up-submit">
+        <Button
+          mt={4}
+          type="submit"
+          id="sign-up-submit"
+          disabled={
+            loading || !values.email || !values.password || !values.username
+          }
+        >
           Registrar
         </Button>
         {status && (

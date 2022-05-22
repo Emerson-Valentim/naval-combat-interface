@@ -46,9 +46,9 @@ const CreateRoomButton: React.FC = () => {
 
   const { initialValues, values, handleSubmit, handleChange } = useFormik({
     initialValues: {
-      title: "Sala do Emerson",
+      title: "",
       type: "PUBLIC",
-      limit: 3,
+      limit: 2,
     },
     onSubmit: (values): void => {
       createRoom({
@@ -132,7 +132,11 @@ const CreateRoomButton: React.FC = () => {
                 />
               </ModalBody>
               <ModalFooter display="flex" justifyContent="space-around">
-                <Button width="100px" type="submit" disabled={loading}>
+                <Button
+                  width="100px"
+                  type="submit"
+                  disabled={loading || !values.title || !values.limit}
+                >
                   Criar
                 </Button>
                 <Button
