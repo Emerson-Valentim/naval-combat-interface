@@ -5,7 +5,7 @@ import { PlusSquareIcon } from "@chakra-ui/icons";
 
 import { useNavigate } from "react-router-dom";
 
-import FullscreenLoadingContext from "../../../../context/3";
+import FullscreenLoadingContext from "../../../../context/Loading";
 import SocketContext from "../../../../context/Socket";
 import { parseBuffer } from "../../../../utils/buffer-parser";
 import Button from "../../../../components/Button";

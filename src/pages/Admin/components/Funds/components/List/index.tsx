@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useContext, useEffect } from "react";
 
-import FullscreenLoadingContext from "../../../../../../context/3";
+import FullscreenLoadingContext from "../../../../../../context/Loading";
 import SocketContext from "../../../../../../context/Socket";
 import ApproveCreditButton from "../ApproveCreditButton";
 

@@ -3,7 +3,7 @@ import { Divider, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import React, { useContext, useEffect, useState } from "react";
 
-import FullscreenLoadingContext from "../../../../context/3";
+import FullscreenLoadingContext from "../../../../context/Loading";
 import SocketContext from "../../../../context/Socket";
 
 import DeleteSkinButton from "./components/DeleteSkinButton";

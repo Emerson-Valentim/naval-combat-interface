@@ -3,7 +3,7 @@ import { Table, Tbody, Td, Th, Thead, Tr, Image } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import React, { useContext, useEffect } from "react";
 
-import FullscreenLoadingContext from "../../../../context/3";
+import FullscreenLoadingContext from "../../../../context/Loading";
 import SocketContext from "../../../../context/Socket";
 import UserContext from "../../../../context/User";
 import { Skin } from "../../../Admin/components/Skins";

@@ -4,7 +4,7 @@ import React, { useContext, useEffect } from "react";
 import { BsCheckLg } from "react-icons/bs";
 
 import Button from "../../../../../../components/Button";
-import FullscreenLoadingContext from "../../../../../../context/3";
+import FullscreenLoadingContext from "../../../../../../context/Loading";
 
 const APPROVE_CREDIT = gql`
   mutation approveFunds($input: ApproveFundsInput!) {

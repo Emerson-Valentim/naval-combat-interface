@@ -4,7 +4,7 @@ import { gql } from "apollo-boost";
 import React, { useContext, useEffect } from "react";
 
 import Button from "../../../../../../components/Button";
-import FullscreenLoadingContext from "../../../../../../context/3";
+import FullscreenLoadingContext from "../../../../../../context/Loading";
 
 const DELETE_SKIN = gql`
   mutation removeSkin($input: RemoveSkinInput!) {

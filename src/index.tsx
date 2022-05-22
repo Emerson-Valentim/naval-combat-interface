@@ -11,7 +11,7 @@ import apolloClient from "./ports/apollo/apollo";
 import { UserContextProvider } from "./context/User";
 import { SocketContextProvider } from "./context/Socket";
 import { RefetchContextProvider } from "./context/Refetch";
-import { FullscreenLoadingContextProvider } from "./context/3";
+import { FullscreenLoadingContextProvider } from "./context/Loading";
 
 ReactDOM.render(
   <React.StrictMode>

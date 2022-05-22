@@ -4,7 +4,7 @@ import React, { useContext, useEffect } from "react";
 import { BsCartCheck } from "react-icons/bs";
 
 import Button from "../../../../components/Button";
-import FullscreenLoadingContext from "../../../../context/3";
+import FullscreenLoadingContext from "../../../../context/Loading";
 import UserContext from "../../../../context/User";
 
 const BUY_SKIN = gql`
