@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  release:
+    types: [prereleased]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install dependencies 
+        uses: yarn
+
+      - name: Create env file
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_REACT_APP_SOCKET_HOST=https://stg.evshosting.net/naval-combat
+          envkey_REACT_APP_SOCKET_PORT=443
+          envkey_REACT_APP_SERVICE_HOST=https://naval-combat-notification.evshosting.net
+
+      - name: Build app
+        uses: yarn build
+
+      - name: Deploy app
+        uses:
+          - aws s3 cp --recursive ./build/ s3://evs-react/

@@ -13,7 +13,9 @@ import Styled from "./styled";
 
 const ADD_SKIN = gql`
   mutation addSkin($input: AddSkinInput!) {
-    addSkin(input: $input)
+    addSkin(input: $input) {
+      id
+    }
   }
 `;
 
@@ -33,6 +35,8 @@ const Form: React.FC<{
   const [voice, setVoice] = useState<FileData>();
   const [avatar, setAvatar] = useState<FileData>();
   const [scenario, setScenario] = useState<FileData>();
+
+  const [medias, setMedias] = useState<{ sounds: any; images: any }>();
 
   const [rerender, updateRerender] = useState(0);
 
@@ -74,7 +78,21 @@ const Form: React.FC<{
     updateRerender((a) => a + 1);
   };
 
-  const [addSkin, { loading: addLoading }] = useMutation(ADD_SKIN);
+  const [addSkin, { loading: addLoading }] = useMutation(ADD_SKIN, {
+    onCompleted: (data) => {
+      setFullscreenLoading(true);
+      updateSkin({
+        variables: {
+          input: {
+            id: data.addSkin.id,
+            ...medias,
+            status: "ACTIVE",
+          },
+        },
+      });
+      setFullscreenLoading(false);
+    },
+  });
   const [updateSkin, { loading: updateLoading }] = useMutation(UPDATE_SKIN);
 
   const {
@@ -124,6 +142,8 @@ const Form: React.FC<{
         };
       }
 
+      setMedias({ sounds, images });
+
       const operation = isEdit
         ? updateSkin({
             variables: {
@@ -138,11 +158,7 @@ const Form: React.FC<{
           })
         : addSkin({
             variables: {
-              input: {
-                ...input,
-                images,
-                sounds,
-              },
+              input,
             },
           });
 
