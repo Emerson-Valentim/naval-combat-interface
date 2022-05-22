@@ -28,7 +28,13 @@ const GET_SKINS = gql`
       cost
       avatar
       scenario
-      voice
+      ship1
+      ship2
+      ship3
+      ship4
+      ship5
+      voiceYes
+      voiceNo
     }
   }
 `;

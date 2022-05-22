@@ -10,15 +10,15 @@ const FormikForm = styled(Form)`
 `;
 
 const MediaBox = styled(Box)`
-  flex-grow: 1;
-
   width: 100%;
 
   display: flex;
-
+  flex-grow: 1;
   justify-content: space-between;
+  flex-wrap: wrap;
 
   margin-top: 12px;
+  overflow-y: scroll;
 `;
 
 const InputContainer = styled.div`

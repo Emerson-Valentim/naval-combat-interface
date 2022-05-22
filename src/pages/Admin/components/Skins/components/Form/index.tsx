@@ -2,11 +2,14 @@ import { useMutation } from "@apollo/client";
 import { Divider, FormLabel, Input } from "@chakra-ui/react";
 import { gql } from "apollo-boost";
 import { Formik, useFormik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { Skin } from "../..";
 import Button from "../../../../../../components/Button";
-import UploadFile, { FileData } from "../../../../../../components/UploadFile";
+import UploadFile, {
+  AcceptedFiles,
+  FileData,
+} from "../../../../../../components/UploadFile";
 import FullscreenLoadingContext from "../../../../../../context/Loading";
 
 import Styled from "./styled";
@@ -25,6 +28,18 @@ const UPDATE_SKIN = gql`
   }
 `;
 
+const imageAlias = [
+  "avatar",
+  "scenario",
+  "ship1",
+  "ship2",
+  "ship3",
+  "ship4",
+  "ship5",
+];
+
+const soundAlias = ["voiceYes", "voiceNo"];
+
 const Form: React.FC<{
   skin?: Skin;
   resetSkin: () => void;
@@ -32,10 +47,9 @@ const Form: React.FC<{
   const [skin, setSkin] = useState<Skin>();
   const [isEdit, setEdit] = useState(!!skin);
 
-  const [voice, setVoice] = useState<FileData>();
-  const [avatar, setAvatar] = useState<FileData>();
-  const [scenario, setScenario] = useState<FileData>();
-
+  const [files, setFiles] = useState<{
+    [key: string]: FileData;
+  }>({});
   const [medias, setMedias] = useState<{ sounds: any; images: any }>();
 
   const [rerender, updateRerender] = useState(0);
@@ -44,33 +58,70 @@ const Form: React.FC<{
     FullscreenLoadingContext
   );
 
+  const MEDIA_DICTIONARY: {
+    label: string;
+    accept: AcceptedFiles;
+    prop: any;
+  }[] = useMemo(() => {
+    return [
+      {
+        label: "Avatar",
+        accept: "image",
+        prop: "avatar",
+      },
+      {
+        label: "Cenário",
+        accept: "image",
+        prop: "scenario",
+      },
+      {
+        label: "Barco 2x1",
+        accept: "image",
+        prop: "ship1",
+      },
+      {
+        label: "Barco 3x1",
+        accept: "image",
+        prop: "ship2",
+      },
+      {
+        label: "Barco 4x1",
+        accept: "image",
+        prop: "ship3",
+      },
+      {
+        label: "Barco 5x1",
+        accept: "image",
+        prop: "ship4",
+      },
+      {
+        label: "Barco 6x2",
+        accept: "image",
+        prop: "ship5",
+      },
+      {
+        label: "Voz - Sim",
+        accept: "audio",
+        prop: "voiceYes",
+      },
+      {
+        label: "Voz - Não",
+        accept: "audio",
+        prop: "voiceNo",
+      },
+    ];
+  }, []);
+
   useEffect(() => {
     setSkin(incomingSkin);
     setEdit(!!incomingSkin);
   }, [incomingSkin]);
 
   useEffect(() => {
-    if (voice) {
-      setFieldValue("voice", voice);
-    }
-  }, [voice]);
-
-  useEffect(() => {
-    if (avatar) {
-      setFieldValue("avatar", avatar);
-    }
-  }, [avatar]);
-
-  useEffect(() => {
-    if (scenario) {
-      setFieldValue("scenario", scenario);
-    }
-  }, [scenario]);
-
-  useEffect(() => {
     if (skin) {
-      setFieldValue("cost", skin.cost);
-      setFieldValue("packageName", skin.name);
+      Object.entries(skin).forEach(([key, value]) => {
+        setFieldValue(key === "name" ? "packageName" : key, value);
+      });
     }
   }, [skin]);
 
@@ -108,6 +159,7 @@ const Form: React.FC<{
         },
       });
 
+      setFiles({});
       setFullscreenLoading(false);
     },
   });
@@ -124,41 +176,35 @@ const Form: React.FC<{
     initialValues: {
       packageName: "",
       cost: 0,
-      avatar,
-      scenario,
-      voice,
     },
-    onSubmit: async (values) => {
+    onSubmit: async ({ packageName, cost }) => {
       setFullscreenLoading(true);
 
       const input: any = {
-        packageName: values.packageName,
-        cost: values.cost,
+        packageName: packageName,
+        cost: cost,
       };
 
       const images: any = {};
       const sounds: any = {};
 
-      if (values.avatar) {
-        images.avatar = {
-          filename: `avatar.${values.avatar.type}`,
-          base64: values.avatar.base64,
-        };
-      }
+      Object.entries(files).forEach(([key, value]) => {
+        if (value) {
+          if (imageAlias.includes(key)) {
+            images[key] = {
+              filename: `${key}.${value.type}`,
+              base64: value.base64,
+            };
+          }
 
-      if (values.scenario) {
-        images.scenario = {
-          filename: `scenario.${values.scenario.type}`,
-          base64: values.scenario.base64,
-        };
-      }
-
-      if (values.voice) {
-        sounds.voice = {
-          filename: `voice.${values.voice.type}`,
-          base64: values.voice.base64,
-        };
-      }
+          if (soundAlias.includes(key)) {
+            sounds[key] = {
+              filename: `${key}.${value.type}`,
+              base64: value.base64,
+            };
+          }
+        }
+      });
 
       setMedias({ sounds, images });
 
@@ -218,32 +264,27 @@ const Form: React.FC<{
         </Styled.InputContainer>
         <Divider orientation="horizontal" mt={4} />
         <Styled.MediaBox>
-          <UploadFile
-            label="Avatar"
-            accept="image"
-            onUpload={setAvatar}
-            src={isEdit ? skin?.avatar : ""}
-            rerender={rerender}
-          />
-          <UploadFile
-            label="Cenário"
-            accept="image"
-            onUpload={setScenario}
-            src={isEdit ? skin?.scenario : ""}
-            rerender={rerender}
-          />
-          <UploadFile
-            label="Voz"
-            accept="audio"
-            onUpload={setVoice}
-            src={isEdit ? skin?.voice : ""}
-            rerender={rerender}
-          />
+          {MEDIA_DICTIONARY.map((item, index) => (
+            <UploadFile
+              key={index}
+              label={item.label}
+              accept={item.accept}
+              onUpload={(value) => {
+                files[item.prop] = value;
+
+                setFiles(files);
+              }}
+              // @ts-expect-error prop cant be typed
+              src={isEdit && skin ? skin[item.prop] : ""}
+              rerender={rerender}
+            />
+          ))}
         </Styled.MediaBox>
         <Styled.Buttons>
           <Button
             disabled={addLoading || updateLoading}
             onClick={() => {
+              setFiles({});
               resetSkin();
               resetForm();
               resetUploader();
@@ -254,14 +295,7 @@ const Form: React.FC<{
           <Button
             justifySelf="baseline"
             type="submit"
-            disabled={
-              isEdit
-                ? updateLoading
-                : addLoading ||
-                  !!Object.values(values).filter(
-                    (value) => value !== 0 && !value
-                  ).length
-            }
+            disabled={isEdit ? updateLoading : addLoading}
           >
             {skin ? "Atualizar" : "Cadastrar"}
           </Button>

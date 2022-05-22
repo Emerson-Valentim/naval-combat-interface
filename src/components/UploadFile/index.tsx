@@ -19,7 +19,7 @@ function getBase64(file: File): Promise<string> {
   });
 }
 
-type AcceptedFiles = "audio" | "image";
+export type AcceptedFiles = "audio" | "image";
 
 export interface FileData {
   base64: string;
@@ -35,7 +35,7 @@ const UploadFile: React.FC<{
   src?: string;
   label: string;
   accept: AcceptedFiles;
-  onUpload: (fileData: FileData) => void;
+  onUpload: (value: FileData) => any;
   rerender: number;
 }> = ({ label, accept, onUpload, src: incomingSrc, rerender }) => {
   const [src, setSrc] = useState(incomingSrc);
