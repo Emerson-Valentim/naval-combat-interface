@@ -36,4 +36,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_bucket: evs-react
           source_dir: "build"
-          destination_dir: "."
+          destination_dir: "./"
