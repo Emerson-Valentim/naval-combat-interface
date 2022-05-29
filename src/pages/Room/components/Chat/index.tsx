@@ -1,10 +1,9 @@
-import { Input } from "@chakra-ui/react";
+import { Input, Tag, Tooltip } from "@chakra-ui/react";
 import { Formik, useFormik } from "formik";
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
 import Button from "../../../../components/Button";
-
 import SocketContext from "../../../../context/Socket";
 import UserContext from "../../../../context/User";
 import { parseBuffer } from "../../../../utils/buffer-parser";
@@ -21,8 +20,6 @@ const Chat: React.FC<{
 }> = ({ messages }) => {
   const { user } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
-
-  const chatRef = useRef<HTMLDivElement>(null);
 
   const params = useParams();
 
@@ -54,14 +51,18 @@ const Chat: React.FC<{
     <Styled.ChatBox>
       <Styled.Messages>
         {messages.map(({ message, sender }, index) => {
-          const isLastMessage = index === messages.length - 1;
+          const isOwner = user.username === sender;
           return (
-            <Styled.ChatMessage
-              key={`message-${index}`}
-              isOwner={user.username === sender}
-              ref={isLastMessage ? chatRef : null}
-            >
-              {sender}: {message}
+            <Styled.ChatMessage key={`message-${index}`} isOwner={isOwner}>
+              <Tooltip label={sender}>
+                <Tag
+                  backgroundColor={isOwner ? "black" : "white"}
+                  color={isOwner ? "white" : "black"}
+                  padding={1}
+                >
+                  {message}
+                </Tag>
+              </Tooltip>
             </Styled.ChatMessage>
           );
         })}
