@@ -14,11 +14,21 @@ export interface User {
       id: string;
       avatar: string;
       scenario: string;
+      ship1: string;
+      ship2: string;
+      ship3: string;
+      ship4: string;
+      ship5: string;
     };
     available: string[];
   };
   balance: number;
   roles: Roles[];
+  meta: {
+    wins: number;
+    loses: number;
+    matches: number;
+  };
 }
 
 interface UserContext {
@@ -53,8 +63,18 @@ const PROFILE = gql`
           id
           avatar
           scenario
+          ship1
+          ship2
+          ship3
+          ship4
+          ship5
         }
         available
+      }
+      meta {
+        wins
+        loses
+        matches
       }
     }
   }
