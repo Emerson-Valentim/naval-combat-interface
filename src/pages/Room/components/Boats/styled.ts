@@ -37,8 +37,9 @@ const Commands = styled.div<{ rotate: number }>`
     border-radius: 10px;
     margin-top: 6px;
     background-color: white;
-
     transform: rotate(${({ rotate }) => rotate * 90}deg);
+
+    cursor: pointer;
   }
 `;
 

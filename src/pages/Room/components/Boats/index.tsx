@@ -2,8 +2,6 @@ import { Image } from "@chakra-ui/react";
 import React from "react";
 import { AiOutlineArrowUp } from "react-icons/ai";
 
-import Button from "../../../../components/Button";
-
 import Styled from "./styled";
 
 export type Direction = "DOWN" | "LEFT" | "UP" | "RIGHT";
@@ -70,8 +68,7 @@ const Boats: React.FC<{
         ))}
       </Styled.Boats>
       <Styled.Commands rotate={DIRECTIONS.indexOf(direction)}>
-        <Button onClick={rotateBoat}>Rotacionar</Button>
-        <AiOutlineArrowUp size={30} />
+        <AiOutlineArrowUp size={40} onClick={rotateBoat} />
       </Styled.Commands>
     </Styled.Container>
   );
