@@ -3,7 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { Board as BoardType } from "../..";
 import UserContext from "../../../../context/User";
+
 import Tiles from "../Tiles";
+
+import Styled from "./styled";
 
 const UserBoard: React.FC<{ board: BoardType }> = ({ board }) => {
   const { user } = useContext(UserContext);
@@ -21,10 +24,10 @@ const UserBoard: React.FC<{ board: BoardType }> = ({ board }) => {
   }, [board?.state[user.id]?.positions]);
 
   return user ? (
-    <>
-      Sua frota
+    <Styled.Container>
+      <Styled.Title>Sua frota</Styled.Title>
       <Tiles positions={dynamicPosition} disabled />
-    </>
+    </Styled.Container>
   ) : null;
 };
 
