@@ -1,7 +1,7 @@
 import { useLazyQuery } from "@apollo/client";
 import { gql } from "apollo-boost";
 import React, { useContext, useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import FullscreenLoadingContext from "../../context/Loading";
 import SocketContext from "../../context/Socket";
@@ -52,6 +52,7 @@ const GET_ROOM = gql`
 
 const Room: React.FC = () => {
   const params = useParams();
+  const navigate = useNavigate();
 
   const { socket } = useContext(SocketContext);
   const { setLoading: setFullscreenLoading } = useContext(
@@ -59,28 +60,31 @@ const Room: React.FC = () => {
   );
   const { user } = useContext(UserContext);
 
+  const [gameOver, setGameOver] = useState<{
+    isGameOver: boolean;
+    winner: string;
+    loser: string;
+  }>({
+    isGameOver: false,
+    winner: "",
+    loser: "",
+  });
+
   const [messages, updateMessages] = useState<Messages[]>([]);
-  const [getRoom, { data, loading, refetch }] = useLazyQuery(GET_ROOM, {
-    variables: {
-      input: {
-        roomId: params.roomId,
+  const [enemyId, setEnemyId] = useState("");
+  const [getRoom, { data: getRoomData, loading: getRoomLoading, refetch }] =
+    useLazyQuery(GET_ROOM, {
+      variables: {
+        input: {
+          roomId: params.roomId,
+        },
       },
-    },
-  });
-
-  const enemyId = data?.getRoom.players.find((enemyId: string) => {
-    if (user?.id) {
-      return enemyId !== user?.id;
-    }
-    return false;
-  });
-
-  console.log(enemyId);
+    });
 
   useEffect(() => {
     socket.on(
       "client:room:update",
-      async ({ message, username, action }: any) => {
+      async ({ message, username, action, data }: any) => {
         await refetch();
 
         if (action === "message") {
@@ -95,6 +99,8 @@ const Room: React.FC = () => {
         }
 
         if (["leave", "join"].includes(action)) {
+          refetch();
+
           updateMessages((value) =>
             value.concat([
               {
@@ -103,9 +109,16 @@ const Room: React.FC = () => {
               },
             ])
           );
+
+          if (action === "leave") {
+            setEnemyId("");
+          }
         }
 
         if (action === "turn") {
+          if (data.isGameOver) {
+            setGameOver(data);
+          }
           refetch();
         }
       }
@@ -121,11 +134,35 @@ const Room: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setFullscreenLoading(loading);
-  }, [loading]);
+    if (getRoomData) {
+      getRoomData.getRoom.players.forEach((enemyId: string) => {
+        if (user?.id) {
+          if (enemyId !== user?.id) {
+            setEnemyId(enemyId);
+          }
+        }
+      });
+    }
+  }, [getRoomData, user]);
+
+  useEffect(() => {
+    setFullscreenLoading(getRoomLoading);
+  }, [getRoomLoading]);
+
+  useEffect(() => {
+    if (gameOver.isGameOver) {
+      const isPlayerWinner = user.id === gameOver.winner;
+
+      navigate("/end", {
+        state: {
+          winner: isPlayerWinner,
+        },
+      });
+    }
+  }, [gameOver]);
 
   return params.roomId ? (
-    data && user ? (
+    getRoomData && user ? (
       <Styled.RoomBox>
         <Styled.Room
           height="100%"
@@ -134,15 +171,19 @@ const Room: React.FC = () => {
           backgroundSize="cover"
         >
           <Styled.FirstColumn>
-            <UserInfo user={user} />
-            <UserBoard board={data.getRoom.board} />
+            <UserInfo userId={user.id} />
+            <UserBoard board={getRoomData.getRoom.board} />
             <LeaveRoomButton roomId={params.roomId} />
           </Styled.FirstColumn>
           <Styled.SecondColumn>
-            <Board board={data.getRoom.board} main userId={enemyId} />
+            <Board
+              board={getRoomData.getRoom.board}
+              userId={enemyId}
+              title={getRoomData.getRoom.title}
+            />
           </Styled.SecondColumn>
           <Styled.ThirdColumn>
-            <UserInfo user={user} />
+            {enemyId ? <UserInfo userId={enemyId} /> : null}
             <Chat messages={messages} />
           </Styled.ThirdColumn>
         </Styled.Room>
@@ -152,12 +193,5 @@ const Room: React.FC = () => {
     <Navigate to="/lobby" />
   );
 };
-
-{
-  /* <Styled.RoomWidgets>
-        <Chat messages={messages} />
-        {data ? <Info room={data?.getRoom} /> : null}
-      </Styled.RoomWidgets> */
-}
 
 export default Room;
