@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Image, TagLabel } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Styled from "./styled";
 
@@ -24,13 +24,17 @@ const GET_PUBLIC_PROFILE = gql`
 `;
 
 const UserInfo: React.FC<{ userId: string }> = ({ userId }) => {
-  const { data } = useQuery(GET_PUBLIC_PROFILE, {
+  const { data, refetch } = useQuery(GET_PUBLIC_PROFILE, {
     variables: {
       input: {
         userId,
       },
     },
   });
+
+  useEffect(() => {
+    refetch();
+  }, [userId]);
 
   return (
     <Styled.Container>
