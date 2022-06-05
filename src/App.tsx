@@ -4,6 +4,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import "./App.css";
 import UserContext from "./context/User";
 import Admin from "./pages/Admin";
+import GameOver from "./pages/GameOver";
 import Welcome from "./pages/Home";
 import Lobby from "./pages/Lobby";
 import Room from "./pages/Room";
@@ -37,6 +38,7 @@ const App = () => {
     <Routes>
       <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
         <Route path="/lobby" element={<Lobby />} />
+        <Route path="/end" element={<GameOver />} />
         <Route path="/room/:roomId" element={<Room />} />
         <Route element={<AdminRoute isAdmin={isAdmin} />}>
           <Route path="/admin" element={<Admin />} />
