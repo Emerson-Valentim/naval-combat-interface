@@ -23,18 +23,42 @@ const RoomBox = styled(Box)`
 `;
 
 const Room = styled(Box)`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
   flex: 1;
 `;
 
-const RoomWidgets = styled(Box)`
-  display: flex;
+const Column = styled(Box)`
+  width: 100%;
+  max-height: 100vh;
 
-  background-color: rgba(255, 255, 128, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 10px;
+`;
+
+const FirstColumn = styled(Column)`
+  flex: 1;
+`;
+
+const SecondColumn = styled(Column)`
+  flex: 2;
+`;
+
+const ThirdColumn = styled(Column)`
+  flex: 1;
 `;
 
 export default {
   RoomTitle,
-  RoomWidgets,
+  FirstColumn,
+  SecondColumn,
+  ThirdColumn,
   RoomBox,
   Room,
 };

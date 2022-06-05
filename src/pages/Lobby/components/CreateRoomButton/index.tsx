@@ -123,13 +123,6 @@ const CreateRoomButton: React.FC = () => {
                   value={values.title}
                   onChange={handleChange}
                 />
-                <FormLabel>Jogadores</FormLabel>
-                <Input
-                  id="limit"
-                  type="number"
-                  value={values.limit}
-                  onChange={handleChange}
-                />
               </ModalBody>
               <ModalFooter display="flex" justifyContent="space-around">
                 <Button

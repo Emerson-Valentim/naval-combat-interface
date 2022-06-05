@@ -4,17 +4,13 @@ import styled from "styled-components";
 
 const BoxWithPadding = styled(Box)`
   margin: 1em;
-
-  height: 40vh;
-
-  border: 1px solid;
+  width: 100%;
   border-radius: 1em;
-
   padding: 1em;
 `;
 
 const ChatBox = styled(BoxWithPadding)`
-  max-width: 70vw;
+  max-width: 30vw;
 
   display: flex;
   flex-direction: column;
@@ -38,11 +34,17 @@ const Messages = styled(Box)`
 `;
 
 const ChatMessage = styled(Text)<{ color: string; isOwner: boolean }>`
-  font-size: 12px;
-  padding: 0.1em;
+  font-size: 14px;
+  font-weight: 700;
 
-  color: ${({ color }) => color};
+  margin-top: 0.3em;
+  border-radius: 5px;
+
+  color: ${({ isOwner }) => (isOwner ? "black" : "left")};
   text-align: ${({ isOwner }) => (isOwner ? "right" : "left")};
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 `;
 
 export default {
