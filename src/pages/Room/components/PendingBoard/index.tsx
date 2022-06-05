@@ -70,18 +70,22 @@ const DIRECTION_VALIDATORS = {
   },
 };
 
+const initialBoat = { name: "", size: -1 };
+const initialTile = { row: -1, column: -1 };
+
 const PendingBoard: React.FC<{
   size: number;
   resetBoard: (positions?: any) => any;
   renderBoard: (positions?: any) => void;
   positions: any;
   roomId: string;
-}> = ({ size, resetBoard, renderBoard, positions, roomId }) => {
+  currentPlayer: string;
+}> = ({ size, resetBoard, renderBoard, positions, roomId, currentPlayer }) => {
   const { user } = useContext(UserContext);
 
   const [isTileValid, setIsTileValid] = useState(false);
-  const [currentBoat, setCurrentBoat] = useState({ name: "", size: -1 });
-  const [currentTile, setCurrentTile] = useState({ row: -1, column: -1 });
+  const [currentBoat, setCurrentBoat] = useState(initialBoat);
+  const [currentTile, setCurrentTile] = useState(initialTile);
   const [selectedBoats, setSelectedBoats] = useState<any>({
     ship1: undefined,
     ship2: undefined,
@@ -100,6 +104,10 @@ const PendingBoard: React.FC<{
       currentBoat.size &&
       currentDirection
     ) {
+      let isBoatOnTopOfAnother = false;
+      let isTileOnBoard = false;
+      let isBoatOnBoard = false;
+
       const selectedPositions: number[][] = [];
 
       const { row, column } = currentTile;
@@ -107,15 +115,15 @@ const PendingBoard: React.FC<{
       const isRowValid = row >= 0 && row < size;
       const isColumnValid = column >= 0 && column < size;
 
-      const isTileOnBoard = isRowValid && isColumnValid;
+      isTileOnBoard = isRowValid && isColumnValid;
 
-      const isBoatOnBoard = validateIsBoatOnBoard(currentDirection, {
-        row,
-        column,
-        size: currentBoat.size,
-      });
-
-      let isBoatOnTopOfAnother = false;
+      if (isTileOnBoard) {
+        isBoatOnBoard = validateIsBoatOnBoard(currentDirection, {
+          row,
+          column,
+          size: currentBoat.size,
+        });
+      }
 
       for (let i = 0; i < currentBoat.size; i++) {
         if (isBoatOnBoard) {
@@ -158,6 +166,9 @@ const PendingBoard: React.FC<{
       });
 
       renderBoard(initialBoard);
+
+      setCurrentBoat(initialBoat);
+      setCurrentTile(initialTile);
     }
   }, [isTileValid, selectedBoats]);
 
@@ -171,18 +182,10 @@ const PendingBoard: React.FC<{
       />
       (
       <>
-        <Boats
-          direction={currentDirection}
-          currentSkin={user?.skin?.current}
-          onBoatClick={(boat) => {
-            setCurrentTile({ column: -1, row: -1 });
-            setCurrentBoat(boat);
-          }}
-          onBoatRotate={setCurrentDirection}
-        />
         <Button
           disabled={
-            Object.values(selectedBoats).filter((value) => !!value).length < 5
+            Object.values(selectedBoats).filter((value) => !!value).length <
+              5 || currentPlayer !== user?.id
           }
           onClick={() =>
             individualSetup({
@@ -197,8 +200,17 @@ const PendingBoard: React.FC<{
             })
           }
         >
-          Posicionar
+          {currentPlayer === user?.id ? "Posicionar" : "Aguarde"}
         </Button>
+        <Boats
+          direction={currentDirection}
+          currentSkin={user?.skin?.current}
+          onBoatClick={(boat) => {
+            setCurrentTile({ column: -1, row: -1 });
+            setCurrentBoat(boat);
+          }}
+          onBoatRotate={setCurrentDirection}
+        />
       </>
     </>
   );
