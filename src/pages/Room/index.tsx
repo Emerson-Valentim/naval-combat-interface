@@ -191,7 +191,7 @@ const Room: React.FC = () => {
         />
         <Styled.Room
           height="100%"
-          backgroundImage={user?.skin.current.scenario}
+          backgroundImage="/room.png"
           backgroundRepeat="no-repeat"
           backgroundSize="cover"
         >

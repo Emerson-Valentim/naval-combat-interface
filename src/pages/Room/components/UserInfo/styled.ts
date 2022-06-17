@@ -7,11 +7,14 @@ const Container = styled.div`
 
   background-color: rgb(80, 140, 255);
 
-  width: fit-content;
+  min-width: 50%;
 
   border-radius: 10px;
 
+  align-items: center;
+
   img {
+    width: fit-content;
     height: 250px;
   }
 `;
@@ -23,6 +26,7 @@ const Title = styled.p`
 `;
 
 const Meta = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   padding: 4px;

@@ -18,7 +18,7 @@ const ChatBox = styled(BoxWithPadding)`
 
   flex-grow: 1;
 
-  background-color: rgba(128, 255, 128, 0.5);
+  background-color: rgba(255, 40, 90, 0.5);
 `;
 
 const ChatForm = styled(Form)`

@@ -5,8 +5,8 @@ import { TileStatus } from "../..";
 const STATE_DICTIONARY: { [key in TileStatus]: string } = {
   EMPTY: "/water.jpeg",
   DESTROYED: "/explosion.png",
-  MISSED: "/bomb.jpeg",
-  FILLED: "red",
+  MISSED: "/bomb.png",
+  FILLED: "/ship.png",
 };
 
 const Row = styled.div`
