@@ -22,8 +22,8 @@ const Tile = styled.div<{
   size: number;
   disabled?: boolean;
 }>`
-  height: ${({ size }) => size * 30}px;
-  width: ${({ size }) => size * 30}px;
+  height: ${({ size }) => size * window.innerHeight * 0.03}px;
+  width: ${({ size }) => size * window.innerHeight * 0.03}px;
   padding: 2px;
   margin: 1px;
 

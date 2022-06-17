@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { gql } from "apollo-boost";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Tiles from "../Tiles";
 

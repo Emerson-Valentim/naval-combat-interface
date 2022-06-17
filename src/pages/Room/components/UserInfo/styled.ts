@@ -15,7 +15,7 @@ const Container = styled.div`
 
   img {
     width: fit-content;
-    height: 250px;
+    height: ${window.innerHeight * 0.25}px;
   }
 `;
 

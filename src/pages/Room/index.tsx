@@ -56,6 +56,7 @@ const Room: React.FC = () => {
   const navigate = useNavigate();
 
   const skinAudioRef = React.createRef<any>();
+  const gameMusicRef = React.createRef<any>();
 
   const { socket } = useContext(SocketContext);
   const { setLoading: setFullscreenLoading } = useContext(
@@ -84,6 +85,16 @@ const Room: React.FC = () => {
         },
       },
     });
+
+  useEffect(() => {
+    if (gameMusicRef.current) {
+      gameMusicRef.current.play();
+    }
+
+    return () => {
+      gameMusicRef.current?.stop();
+    };
+  }, [gameMusicRef]);
 
   useEffect(() => {
     socket.on(
@@ -178,7 +189,13 @@ const Room: React.FC = () => {
 
   return params.roomId ? (
     getRoomData && user ? (
-      <Styled.RoomBox>
+      <Styled.RoomBox
+        backgroundImage="/room.png"
+        backgroundRepeat="no-repeat"
+        backgroundSize="cover"
+        backgroundPosition="center"
+      >
+        <audio src="/music.mp3" ref={gameMusicRef} loop />
         <audio
           src={
             scored
@@ -189,12 +206,7 @@ const Room: React.FC = () => {
           }
           ref={skinAudioRef}
         />
-        <Styled.Room
-          height="100%"
-          backgroundImage="/room.png"
-          backgroundRepeat="no-repeat"
-          backgroundSize="cover"
-        >
+        <Styled.Room height="100%">
           <Styled.FirstColumn>
             <UserInfo userId={user.id} />
             <UserBoard board={getRoomData.getRoom.board} />
