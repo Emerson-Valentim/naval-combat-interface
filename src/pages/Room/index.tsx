@@ -175,12 +175,19 @@ const Room: React.FC = () => {
   }, [gameOver]);
 
   const scored = audioEvent?.happy === user.id;
+  const hit = audioEvent?.sad === user.id;
 
   return params.roomId ? (
     getRoomData && user ? (
       <Styled.RoomBox>
         <audio
-          src={scored ? user.skin.current.voiceYes : user.skin.current.voiceYes}
+          src={
+            scored
+              ? user.skin.current.voiceYes
+              : hit
+              ? user.skin.current.voiceYes
+              : ""
+          }
           ref={audioRef}
         />
         <Styled.Room
