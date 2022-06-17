@@ -55,7 +55,7 @@ const Room: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const audioRef = React.createRef<any>();
+  const skinAudioRef = React.createRef<any>();
 
   const { socket } = useContext(SocketContext);
   const { setLoading: setFullscreenLoading } = useContext(
@@ -123,7 +123,6 @@ const Room: React.FC = () => {
           if (data?.isGameOver) {
             setGameOver(data);
           }
-          console.log(data);
           setAudioEvent(data);
 
           refetch();
@@ -141,9 +140,8 @@ const Room: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (audioEvent?.happy && audioEvent.sad) {
-      audioRef.current.play();
-    }
+    console.log(audioEvent);
+    skinAudioRef.current.play();
   }, [audioEvent]);
 
   useEffect(() => {
@@ -174,8 +172,8 @@ const Room: React.FC = () => {
     }
   }, [gameOver]);
 
-  const scored = audioEvent?.happy === user.id;
-  const hit = audioEvent?.sad === user.id;
+  const scored = audioEvent?.happy === user?.id;
+  const hit = audioEvent?.sad === user?.id;
 
   return params.roomId ? (
     getRoomData && user ? (
@@ -186,9 +184,9 @@ const Room: React.FC = () => {
               ? user.skin.current.voiceYes
               : hit
               ? user.skin.current.voiceYes
-              : ""
+              : "/miss.mp3"
           }
-          ref={audioRef}
+          ref={skinAudioRef}
         />
         <Styled.Room
           height="100%"
