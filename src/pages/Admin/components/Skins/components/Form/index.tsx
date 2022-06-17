@@ -75,27 +75,27 @@ const Form: React.FC<{
         prop: "scenario",
       },
       {
-        label: "Barco 2x1",
+        label: "Barco 1x1",
         accept: "image",
         prop: "ship1",
       },
       {
-        label: "Barco 3x1",
+        label: "Barco 2x1",
         accept: "image",
         prop: "ship2",
       },
       {
-        label: "Barco 4x1",
+        label: "Barco 3x1",
         accept: "image",
         prop: "ship3",
       },
       {
-        label: "Barco 5x1",
+        label: "Barco 4x1",
         accept: "image",
         prop: "ship4",
       },
       {
-        label: "Barco 6x2",
+        label: "Barco 5x1",
         accept: "image",
         prop: "ship5",
       },

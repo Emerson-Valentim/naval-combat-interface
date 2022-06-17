@@ -18,7 +18,7 @@ const ChatBox = styled(BoxWithPadding)`
 
   flex-grow: 1;
 
-  background-color: rgba(128, 255, 128, 0.5);
+  background-color: rgba(255, 40, 90, 0.5);
 `;
 
 const ChatForm = styled(Form)`
@@ -31,6 +31,13 @@ const Messages = styled(Box)`
   overflow: scroll;
 
   padding: 0 1em 0 1em;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    border: 1px solid black;
+  }
 `;
 
 const ChatMessage = styled(Text)<{ color: string; isOwner: boolean }>`

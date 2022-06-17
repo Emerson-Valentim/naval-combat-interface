@@ -10,7 +10,13 @@ const GameOver: React.FC = () => {
   const { state } = useLocation() as { state: { winner: boolean } };
 
   return (
-    <Styled.Container>
+    <Styled.Container
+      width="100vw"
+      backgroundImage="/room.png"
+      backgroundRepeat="no-repeat"
+      backgroundSize="cover"
+      backgroundPosition="center"
+    >
       <Styled.Title>
         {state?.winner ? "Você venceu" : "Você Perdeu"}
       </Styled.Title>

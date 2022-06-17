@@ -1,15 +1,15 @@
+import { Container as CContainer } from "@chakra-ui/react";
 import styled from "styled-components";
 
-const Container = styled.div`
-  background-color: black;
+const Container = styled(CContainer)`
   display: flex;
   flex-direction: column;
 
   align-items: center;
   justify-content: center;
 
-  width: 100vw;
   height: 100vh;
+  max-width: 100vw !important;
 `;
 
 const Title = styled.div`
