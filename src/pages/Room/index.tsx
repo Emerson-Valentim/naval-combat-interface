@@ -140,8 +140,9 @@ const Room: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(audioEvent);
-    skinAudioRef.current.play();
+    if (skinAudioRef.current) {
+      skinAudioRef.current.play();
+    }
   }, [audioEvent]);
 
   useEffect(() => {
