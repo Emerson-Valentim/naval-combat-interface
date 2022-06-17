@@ -52,7 +52,10 @@ const GET_ROOM = gql`
 
 const Room: React.FC = () => {
   const params = useParams();
+
   const navigate = useNavigate();
+
+  const audioRef = React.createRef<any>();
 
   const { socket } = useContext(SocketContext);
   const { setLoading: setFullscreenLoading } = useContext(
@@ -69,7 +72,8 @@ const Room: React.FC = () => {
     winner: "",
     loser: "",
   });
-
+  const [audioEvent, setAudioEvent] =
+    useState<{ happy: string; sad: string }>();
   const [messages, updateMessages] = useState<Messages[]>([]);
   const [enemyId, setEnemyId] = useState("");
   const [getRoom, { data: getRoomData, loading: getRoomLoading, refetch }] =
@@ -116,9 +120,12 @@ const Room: React.FC = () => {
         }
 
         if (action === "turn") {
-          if (data.isGameOver) {
+          if (data?.isGameOver) {
             setGameOver(data);
           }
+          console.log(data);
+          setAudioEvent(data);
+
           refetch();
         }
       }
@@ -132,6 +139,12 @@ const Room: React.FC = () => {
   useEffect(() => {
     getRoom();
   }, []);
+
+  useEffect(() => {
+    if (audioEvent?.happy && audioEvent.sad) {
+      audioRef.current.play();
+    }
+  }, [audioEvent]);
 
   useEffect(() => {
     if (getRoomData) {
@@ -161,9 +174,15 @@ const Room: React.FC = () => {
     }
   }, [gameOver]);
 
+  const scored = audioEvent?.happy === user.id;
+
   return params.roomId ? (
     getRoomData && user ? (
       <Styled.RoomBox>
+        <audio
+          src={scored ? user.skin.current.voiceYes : user.skin.current.voiceYes}
+          ref={audioRef}
+        />
         <Styled.Room
           height="100%"
           backgroundImage={user?.skin.current.scenario}

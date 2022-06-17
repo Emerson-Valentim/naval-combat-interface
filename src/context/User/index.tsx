@@ -19,6 +19,8 @@ export interface User {
       ship3: string;
       ship4: string;
       ship5: string;
+      voiceYes: string;
+      voiceNo: string;
     };
     available: string[];
   };
@@ -68,6 +70,8 @@ const PROFILE = gql`
           ship3
           ship4
           ship5
+          voiceYes
+          voiceNo
         }
         available
       }
