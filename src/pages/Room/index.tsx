@@ -184,7 +184,7 @@ const Room: React.FC = () => {
             scored
               ? user.skin.current.voiceYes
               : hit
-              ? user.skin.current.voiceYes
+              ? user.skin.current.voiceNo
               : "/miss.mp3"
           }
           ref={skinAudioRef}
