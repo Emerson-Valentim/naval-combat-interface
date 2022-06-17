@@ -10,6 +10,10 @@ const Container = styled.div`
   width: fit-content;
 
   border-radius: 10px;
+
+  img {
+    height: 250px;
+  }
 `;
 
 const Title = styled.p`
