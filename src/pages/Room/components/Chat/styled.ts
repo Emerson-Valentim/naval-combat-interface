@@ -10,6 +10,8 @@ const BoxWithPadding = styled(Box)`
 `;
 
 const ChatBox = styled(BoxWithPadding)`
+  overflow: scroll;
+  
   max-width: 30vw;
 
   display: flex;
@@ -28,8 +30,6 @@ const ChatForm = styled(Form)`
 `;
 
 const Messages = styled(Box)`
-  overflow: scroll;
-
   padding: 0 1em 0 1em;
 `;
 
@@ -42,8 +42,8 @@ const ChatMessage = styled(Text)<{ color: string; isOwner: boolean }>`
 
   color: ${({ isOwner }) => (isOwner ? "black" : "left")};
   text-align: ${({ isOwner }) => (isOwner ? "right" : "left")};
-  overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-work;
   hyphens: auto;
 `;
 
