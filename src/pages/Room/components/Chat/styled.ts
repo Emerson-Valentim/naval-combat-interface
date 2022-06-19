@@ -10,8 +10,8 @@ const BoxWithPadding = styled(Box)`
 `;
 
 const ChatBox = styled(BoxWithPadding)`
-  overflow: scroll;
   max-width: 30vw;
+  max-height: 40vh;
 
   display: flex;
   flex-direction: column;
@@ -29,6 +29,8 @@ const ChatForm = styled(Form)`
 `;
 
 const Messages = styled(Box)`
+  overflow-y: scroll;
+
   padding: 0 1em 0 1em;
 `;
 
