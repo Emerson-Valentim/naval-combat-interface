@@ -11,7 +11,6 @@ const BoxWithPadding = styled(Box)`
 
 const ChatBox = styled(BoxWithPadding)`
   overflow: scroll;
-  
   max-width: 30vw;
 
   display: flex;
