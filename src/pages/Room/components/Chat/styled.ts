@@ -31,13 +31,6 @@ const Messages = styled(Box)`
   overflow: scroll;
 
   padding: 0 1em 0 1em;
-
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 10px;
-    height: 10px;
-    border: 1px solid black;
-  }
 `;
 
 const ChatMessage = styled(Text)<{ color: string; isOwner: boolean }>`
